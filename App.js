@@ -44,7 +44,7 @@ class App extends React.Component {
     const markOptions=
     [
       {
-        label: 'Az',
+        label: 'A',
         value: 4
       },
       {
