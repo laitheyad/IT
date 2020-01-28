@@ -21,8 +21,19 @@ class App extends React.Component {
       fullGPA: '',
       semesterHours: '',
       modalVisible: true,
-      marks: [],
-     
+      m1:null,
+      m2:null,
+      m3:null,
+      m4:null,
+      m5:null,
+      m6:null,
+      m7:null,
+      h1:null,
+      h2:null,
+      h3:null,
+      h5:null,
+      h6:null,
+      h7:null,
     }
     this.modalView = this.modalView.bind(this);
   }
@@ -32,7 +43,6 @@ class App extends React.Component {
       this.setState({ modalVisible: false })
     else
       this.setState({ modalVisible: true })
-
   }
 
   calculate(){
@@ -44,58 +54,63 @@ class App extends React.Component {
     const markOptions=
     [
       {
-        label: 'A',
+        label: 'اختر العلامه',
         value: 4
       },
       {
-        label: 'A-',
+        label: 'أ',
+        value: 4
+      },
+      {
+        label: '-أ',
         value: 3.75
       },
       {
-        label: 'B+',
+        label: '+ب',
         value: 3.5
       },
       {
-        label: 'B',
+        label: 'ب',
         value: 3
       },
       {
-        label: 'B-',
+        label: '-ب',
         value: 2.75
       },
       {
-        label: 'C+',
+        label: '+ج',
         value: 2.5
       },
       {
-        label: 'C',
+        label: 'ج',
         value: 2
       },
       {
-        label: 'C-',
+        label: '-ج',
         value: 1.75
       },
       {
-        label: 'D+',
+        label: '+د',
         value: 1.5
       },
       {
-        label: 'D',
+        label: 'د',
         value: 1
       },
       {
-        label: 'D-',
+        label: '-د',
         value: 0.75
       },
       {
-        label: 'F',
+        label: 'هـ',
         value: 0
       },
     ]
-    const subHours=[1,2,3]
+
+    const hoursOptions=['عدد الساعات',1,2,3]
     
     return (
-      <View>
+      <View style={styles.main_container}>
         <Modal
           animationType="slide"
           transparent={false}
@@ -122,21 +137,97 @@ class App extends React.Component {
           <Text style={styles.buttons}>Edit</Text>
         </TouchableOpacity>
 
-        <FlatList
-        data={[1,1,1]}
-        renderItem={({item})=>
-        <View style={styles.container}>
-          <Image style={{ width: 25, height: 25, margin: 10 }} source={require('./icons/brain.png')} />
-          <Picker style={{ width: 300, textAlignVertical: 'center' }} selectedValue={this.state.m1} onValueChange={(text) => this.setState({ m1: text })} >
+        <View style={styles.picker_container}>
+          <Picker style={styles.markPicker} selectedValue={this.state.m1} onValueChange={(text) => this.setState({ m1: text })} >
           {markOptions.map((item, index) => {
               return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
           })}
-          </Picker> 
-           
-
+          </Picker>
+          <Picker style={styles.hoursPicker} selectedValue={this.state.h1} onValueChange={(text) => this.setState({ h1: text })}>
+          {hoursOptions.map((item, index) => {
+              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
+          })}
+          </Picker>
         </View>
-      }
-        />
+
+        <View style={styles.picker_container}>
+          <Picker style={styles.markPicker} selectedValue={this.state.m2} onValueChange={(text) => this.setState({ m2: text })} >
+          {markOptions.map((item, index) => {
+              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
+          })}
+          </Picker>
+          <Picker style={styles.hoursPicker} selectedValue={this.state.h2} onValueChange={(text) => this.setState({ h2: text })}>
+          {hoursOptions.map((item, index) => {
+              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
+          })}
+          </Picker>
+        </View>
+
+        <View style={styles.picker_container}>
+          <Picker style={styles.markPicker} selectedValue={this.state.m3} onValueChange={(text) => this.setState({ m3: text })} >
+          {markOptions.map((item, index) => {
+              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
+          })}
+          </Picker>
+          <Picker style={styles.hoursPicker} selectedValue={this.state.h3} onValueChange={(text) => this.setState({ h3: text })}>
+          {hoursOptions.map((item, index) => {
+              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
+          })}
+          </Picker>
+        </View>
+
+        <View style={styles.picker_container}>
+          <Picker style={styles.markPicker} selectedValue={this.state.m4} onValueChange={(text) => this.setState({ m4: text })} >
+          {markOptions.map((item, index) => {
+              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
+          })}
+          </Picker>
+          <Picker style={styles.hoursPicker} selectedValue={this.state.h4} onValueChange={(text) => this.setState({ h4: text })}>
+          {hoursOptions.map((item, index) => {
+              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
+          })}
+          </Picker>
+        </View>
+
+        <View style={styles.picker_container}>
+          <Picker style={styles.markPicker} selectedValue={this.state.m5} onValueChange={(text) => this.setState({ m5: text })} >
+          {markOptions.map((item, index) => {
+              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
+          })}
+          </Picker>
+          <Picker style={styles.hoursPicker} selectedValue={this.state.h5} onValueChange={(text) => this.setState({ h5: text })}>
+          {hoursOptions.map((item, index) => {
+              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
+          })}
+          </Picker>
+        </View>
+
+        <View style={styles.picker_container}>
+          <Picker style={styles.markPicker} selectedValue={this.state.m6} onValueChange={(text) => this.setState({ m6: text })} >
+          {markOptions.map((item, index) => {
+              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
+          })}
+          </Picker>
+          <Picker style={styles.hoursPicker} selectedValue={this.state.h6} onValueChange={(text) => this.setState({ h6: text })}>
+          {hoursOptions.map((item, index) => {
+              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
+          })}
+          </Picker>
+        </View>
+
+
+        <View style={styles.picker_container}>
+          <Picker style={styles.markPicker} selectedValue={this.state.m7} onValueChange={(text) => this.setState({ m7: text })} >
+          {markOptions.map((item, index) => {
+              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
+          })}
+          </Picker>
+          <Picker style={styles.hoursPicker} selectedValue={this.state.h7} onValueChange={(text) => this.setState({ h7: text })}>
+          {hoursOptions.map((item, index) => {
+              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
+          })}
+          </Picker>
+        </View>
         <TouchableOpacity >
           <Text style={styles.buttons}>Calculate</Text>
         </TouchableOpacity>
@@ -147,14 +238,15 @@ class App extends React.Component {
 
 const styles = StyleSheet.create(
   {
-    container: {
-      marginTop: '5%',
-      width: 350,
-      flexDirection: 'row',
-      borderColor: '#7b8b8c',
-      borderWidth: 1,
-      borderRadius: 25,
-
+    main_container:{
+      padding:20
+    },
+    picker_container: {
+      flexDirection:'row',
+      justifyContent:'space-between',
+      alignItems:'center',
+      borderWidth:1,
+      borderColor:'rgba(0,0,0,0.1)'
     },
     Image: {
       marginTop: '10%',
@@ -170,7 +262,6 @@ const styles = StyleSheet.create(
       textAlignVertical: 'center',
       borderRadius: 15,
       fontSize: 15,
-      width: 350,
       color: '#3b3d3d'
     },
     Home: {
@@ -184,6 +275,12 @@ const styles = StyleSheet.create(
       marginLeft: '2%',
       opacity: 0.5,
       fontSize: 20
+    },
+    markPicker:{
+      width:'60%'
+    },
+    hoursPicker:{
+      width:'40%'
     }
   }
 )
