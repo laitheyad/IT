@@ -36,6 +36,7 @@ class App extends React.Component {
       h7:null,
     }
     this.modalView = this.modalView.bind(this);
+    this.calculate = this.calculate.bind(this);
   }
 
   modalView() {
@@ -43,11 +44,55 @@ class App extends React.Component {
       this.setState({ modalVisible: false })
     else
       this.setState({ modalVisible: true })
+
+      console.log(this.state.fullGPA)
+      console.log(this.state.Allhours)
+      console.log(this.state.fullGPA*this.state.Allhours)
+
+
   }
 
   calculate(){
-    let old = this.state.Allhours * this.state.fullGPA;
-    let gpa = 0;
+    let oldGPA = this.state.Allhours * this.state.fullGPA;
+    let Allhours = parseInt(this.state.Allhours);
+    let newGPA = 0;
+    let counter = 0;
+    if(this.state.m1 != null && this.state.h1 != null){
+      newGPA+=this.state.m1*this.state.h1;
+      counter+=this.state.h1;
+    }
+    if(this.state.m2 != null && this.state.h2 != null){
+      newGPA+=this.state.m2*this.state.h2;
+      counter+=this.state.h2;
+
+    }
+    if(this.state.m3 != null && this.state.h3 != null){
+      newGPA+=this.state.m3*this.state.h3;
+      counter+=this.state.h3
+
+    }
+    if(this.state.m4 != null && this.state.h4 != null){
+      newGPA+=this.state.m4*this.state.h4;
+      counter+=this.state.h4
+
+    }
+    if(this.state.m5 != null && this.state.h5 != null){
+      newGPA+=this.state.m5*this.state.h5;
+      counter+=this.state.h5
+
+    }
+    if(this.state.m6 != null && this.state.h6 != null){
+      newGPA+=this.state.m6*this.state.h6;
+      counter+=this.state.h6
+
+    }
+    if(this.state.m7 != null && this.state.h7 != null){
+      newGPA+=this.state.m7*this.state.h7;
+      counter+=this.state.h7
+
+    }
+    let semGPA=newGPA/counter;
+    let fullGPA=oldGPA/(counter+Allhours)
   }
 
   render() {
@@ -112,21 +157,18 @@ class App extends React.Component {
     return (
       <View style={styles.main_container}>
         <Modal
+        presentationStyle='formSheet'
           animationType="slide"
           transparent={false}
           visible={this.state.modalVisible}>
           <View style={{ justifyContent: 'center', margin: '5%', alignItems: 'center' }}>
             <View style={styles.container}>
               <TextInput placeholder="المعدل التراكمي" underlineColorAndroid='transparent' keyboardType={'numeric'}
-                value={this.state.fullGPA} style={{ width: 300, textAlignVertical: 'center' }} onChangeText={(text) => this.setState({ fullGPA: text })} />
+                value={this.state.fullGPA} style={{ width: 300, textAlignVertical: 'center' }} onChangeText={(text) => this.setState({ fullGPA: parseFloat(text) })} />
             </View>
             <View style={styles.container}>
               <TextInput placeholder="الساعات المقطوعه" underlineColorAndroid='transparent' keyboardType={'numeric'}
-                value={this.state.semesterHours} style={{ width: 300, textAlignVertical: 'center' }} onChangeText={(text) => this.setState({ Allhours: text })} />
-            </View>
-            <View style={styles.container}>
-              <TextInput placeholder="الساعات الفصليه" underlineColorAndroid='transparent' keyboardType={'numeric'}
-                value={this.state.semesterHours} style={{ width: 300, textAlignVertical: 'center' }} onChangeText={(text) => this.setState({ semesterHours: text })} />
+                value={this.state.Allhours} style={{ width: 300, textAlignVertical: 'center' }} onChangeText={(text) => this.setState({ Allhours: parseInt(text,10) })} />
             </View>
             <TouchableOpacity onPress={this.modalView} >
               <Text style={styles.buttons}>Next</Text>
@@ -228,7 +270,7 @@ class App extends React.Component {
           })}
           </Picker>
         </View>
-        <TouchableOpacity >
+        <TouchableOpacity onPress={this.calculate}>
           <Text style={styles.buttons}>Calculate</Text>
         </TouchableOpacity>
       </View>
