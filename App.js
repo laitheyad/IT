@@ -94,7 +94,7 @@ class App extends React.Component {
               renderTabBar={props => 
               <TabBar 
               activeColor="#fff"
-              inactiveColor="rgba(0,0,0,0.4)"
+              inactiveColor="rgba(0,0,0,0.3)"
               style={{backgroundColor:'#1e88e5',elevation:0}}
               indicatorStyle={{ backgroundColor: '#fff',height:3}}
               {...props} 
