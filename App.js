@@ -12,13 +12,8 @@ import {
 } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {Icon} from 'react-native-elements';
-import PDFView from 'react-native-view-pdf';
+import firestore from '@react-native-firebase/firestore';
 
-const resources = {
-  // file: Platform.OS === 'ios' ? 'test-pdf.pdf' : '/sdcard/Download/test-pdf.pdf',
-  url: 'http://www.africau.edu/images/default/sample.pdf',
-  // base64: 'JVBERi0xLjMKJcfs...',
-};
 
 const testbanks = () => (
   <ScrollView style={[styles.scene, { backgroundColor: 'rgba(0,0,0,0.05)' }]}>
@@ -57,22 +52,37 @@ class App extends React.Component {
     };
   }
 
-  render() {
-      const resourceType = 'url';
+  componentDidMount(){   
+  }
 
+  async read(){
+    let x= await firestore()
+    .collection('notebook')
+    .get().then(snapshot => {
+      snapshot
+        .docs
+        .forEach(doc => {
+          console.log(JSON.parse(doc._document.data.toString()))
+        });
+    });
+    // console.log('added',x);
+  }
+
+  async add(author,description,filelink,subject_name){
+    await firestore()
+    .collection('notebook')
+    .add({
+      author:author,
+      description:description,
+      filelink:filelink,
+      subject_name:subject_name,
+    });
+    console.log('added');
+  }
+
+  render() {
     return (
       <View style={styles.main_container}>
-        <View style={{ flex: 1,display:'none' }}>
-          {/* Some Controls to change PDF resource */}
-          <PDFView
-            fadeInDuration={250.0}
-            style={{ flex: 1 }}
-            resource={resources[resourceType]}
-            resourceType={resourceType}
-            onLoad={() => console.log(`PDF rendered from ${resourceType}`)}
-            onError={() => console.log('Cannot render PDF', error)}
-          />
-        </View>
         <View style={[styles.header_container,{display:'flex'}]}>
           <Text style={styles.subject_title}>الذكاء الاصطناعي</Text>
           <View style={styles.header_specs_container}>
@@ -89,6 +99,10 @@ class App extends React.Component {
               أكسير سيتاشن يللأمكو لابورأس نيسي يت أليكيوب أكس أيا كوممودو كونسيكيوات .
             </Text>
           </View>
+          <TouchableOpacity onPress={
+            // ()=>this.add('ahmad','something for desc','www.google.com','math')
+            ()=>this.read()
+            }><Text>upload</Text></TouchableOpacity>
           <View style={styles.tabs_container}>
             <TabView
               renderTabBar={props => 
