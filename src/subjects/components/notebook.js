@@ -2,14 +2,11 @@ import React from 'react';
 import {StyleSheet,Text,View,TouchableNativeFeedback, TouchableOpacity, Linking} from 'react-native';
 import {Icon} from 'react-native-elements';
 
-export default class TestbankFile extends React.Component {
+export default class NotebookFile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
     };
-  }
-
-  componentDidMount(){   
   }
 
   render() {
@@ -22,8 +19,7 @@ export default class TestbankFile extends React.Component {
                 <Icon color='#5F6368' name='pdffile1' size={17} type='antdesign' />
                 </View>
                 <View style={{flexDirection:'row'}}>
-                    <Text style={styles.notebook_item_author_name}>{object.reference}</Text>
-                    <Text style={styles.notebook_item_author_name}>{object.type}</Text>
+                    <Text style={styles.notebook_item_author_name}>{object.author}</Text>
                 </View>
             </View>
             <View style={{marginRight:10}}>
@@ -35,15 +31,12 @@ export default class TestbankFile extends React.Component {
 };
 
 const styles = StyleSheet.create({
-  main_container: {
-    flex: 1
-  },
   notebook_item:{
     flexDirection:'row-reverse',
     justifyContent:'space-between',
     alignItems:'center',
     padding:10,
-    backgroundColor:'#fff',
+    backgroundColor:'#ecf0f1',
     borderBottomWidth:1,
     borderColor:'#34495e',
   },

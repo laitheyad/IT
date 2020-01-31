@@ -3,41 +3,13 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  TouchableNativeFeedback,
   FlatList,
   Dimensions,
-  ScrollView
 } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import {Icon} from 'react-native-elements';
-
-const testbanks = () => (
-  <ScrollView style={[styles.scene, { backgroundColor: 'rgba(0,0,0,0.05)' }]}>
-    <View style={styles.notebook_item}>
-      <View style={{flexDirection:'row',alignItems:'center'}}>
-        <Text style={{marginRight:10}}>تيست بانك كاسيت طيز</Text>
-        <Icon color='blue' name='pdffile1' size={17} type='antdesign' />
-      </View>
-      <Text style={styles.notebook_item_author_name}>الشرقاوي</Text>
-    </View>
-  </ScrollView>
-);
-
-const notebooks = () => (
-  <ScrollView style={[styles.scene, { backgroundColor: 'rgba(0,0,0,0.05)' }]}>
-    <TouchableNativeFeedback onPress={()=>alert('hi')}>
-    <View style={styles.notebook_item}>
-      <View style={{flexDirection:'row',alignItems:'center'}}>
-        <Text style={{marginRight:10}}>تيست بانك كاسيت طيز</Text>
-        <Icon color='blue' name='pdffile1' size={17} type='antdesign' />
-      </View>
-      <Text style={styles.notebook_item_author_name}>الشرقاوي</Text>
-    </View>
-    </TouchableNativeFeedback>
-  </ScrollView>
-);
-
+import { Icon } from 'react-native-elements';
+import TestbankFile from './components/testbank'
+import NotebookFile from './components/notebook'
 class SubjectDetailView extends React.Component {
   constructor(props) {
     super(props);
@@ -47,54 +19,93 @@ class SubjectDetailView extends React.Component {
         { key: 'testbanks', title: 'اسئلة سنوات' },
         { key: 'notebooks', title: 'دوسيات' },
       ],
+      subject_object: null,
+      subject_id: null
     };
   }
 
-  componentDidMount(){   
+  componentDidMount() {
+    this.setState({ subject_id: this.props.navigation.getParam('subject_id', null) }, async () => {
+      if (this.state.subject_id != null) {
+        try {
+          await fetch('http://laitheyad1.pythonanywhere.com/subjects/' + this.state.subject_id)
+            .then((response) => response.json())
+            .then((responseJson) => {
+              this.setState({ subject_object: responseJson }, () => console.log(this.state.subject_object))
+            });
+        }
+        catch (error) {
+          console.log(error);
+        }
+      }
+    });
   }
 
   render() {
-    return (
-      <View style={styles.main_container}>
-        <View style={[styles.header_container,{display:'flex'}]}>
-          <Text style={styles.subject_title}>الذكاء الاصطناعي</Text>
-          <View style={styles.header_specs_container}>
-            <Text style={styles.header_specs}>سنه ثالثه</Text>
-            <Text style={styles.header_specs}>1902342</Text>
-            <Text style={styles.header_specs}>حفظ</Text>
+    const {subject_object} = this.state;
+    if (this.state.subject_object != null) {
+      const testbanks = () => (
+        <FlatList
+        style={[styles.scene, { backgroundColor: 'rgba(0,0,0,0.05)' }]}
+        data={subject_object.testbank}
+        renderItem={({item})=>
+          <TestbankFile object={item} />
+        }
+        keyExtractor={(item) => item.pk.toString()}
+        />
+      );
+      
+      const notebooks = () => (
+        <FlatList
+        style={[styles.scene, { backgroundColor: 'rgba(0,0,0,0.05)' }]}
+        data={subject_object.notebook}
+        renderItem={({item})=>
+          <NotebookFile object={item} />
+        }
+        keyExtractor={(item) => item.pk.toString()}
+        />
+      );
+      return (
+        <View style={styles.main_container}>
+          <View style={[styles.header_container, { display: 'flex' }]}>
+            <Text style={styles.subject_title}>{subject_object.name}</Text>
+            <View style={styles.header_specs_container}>
+              <Text style={styles.header_specs}>سنه ثالثه</Text>
+              <Text style={styles.header_specs}>1902342</Text>
+              <Text style={styles.header_specs}>حفظ</Text>
+            </View>
+          </View>
+          <View style={[styles.content_container, { display: 'flex' }]}>
+            <View style={styles.desc_container}>
+              <Text style={styles.desc_container_text}>{subject_object.description}</Text>
+            </View>
+            <View style={styles.tabs_container}>
+              <TabView
+                renderTabBar={props =>
+                  <TabBar
+                    activeColor="#fff"
+                    inactiveColor="rgba(0,0,0,0.3)"
+                    style={{ backgroundColor: '#1e88e5', elevation: 0 }}
+                    indicatorStyle={{ backgroundColor: '#fff', height: 3 }}
+                    {...props}
+                  />}
+                swipeEnabled={true}
+                navigationState={this.state}
+                renderScene={SceneMap({
+                  testbanks: testbanks,
+                  notebooks: notebooks,
+                })}
+                onIndexChange={index => this.setState({ index })}
+                initialLayout={{ width: Dimensions.get('window').width }}
+              />
+            </View>
           </View>
         </View>
-        <View style={[styles.content_container,{display:'flex'}]}>
-          <View style={styles.desc_container}>
-            <Text style={styles.desc_container_text}>
-              لوريم ايبسوم دولار سيت أميت ,كونسيكتيتور أدايبا يسكينج أليايت,سيت دو أيوسمود تيمبور
-              أنكايديديونتيوت لابوري ات دولار ماجنا أليكيوا . يوت انيم أد مينيم فينايم,كيواس نوستريد
-              أكسير سيتاشن يللأمكو لابورأس نيسي يت أليكيوب أكس أيا كوممودو كونسيكيوات .
-            </Text>
-          </View>
-          <View style={styles.tabs_container}>
-            <TabView
-              renderTabBar={props => 
-              <TabBar 
-              activeColor="#fff"
-              inactiveColor="rgba(0,0,0,0.3)"
-              style={{backgroundColor:'#1e88e5',elevation:0}}
-              indicatorStyle={{ backgroundColor: '#fff',height:3}}
-              {...props} 
-              />}
-              swipeEnabled={true}
-              navigationState={this.state}
-              renderScene={SceneMap({
-                testbanks: testbanks,
-                notebooks: notebooks,
-              })}
-              onIndexChange={index => this.setState({ index })}
-              initialLayout={{ width: Dimensions.get('window').width }}
-            />
-          </View>
-        </View>
-      </View>
-    );
+      );
+    }
+    else return (
+      <View><Text>fuck off</Text></View>
+    )
   }
 };
 
@@ -105,7 +116,7 @@ const styles = StyleSheet.create({
   content_container: {
     padding: 15,
     flex: 1,
-    backgroundColor:'rgba(0,0,0,0.04)'
+    backgroundColor: 'rgba(0,0,0,0.04)'
   },
   header_container: {
     backgroundColor: '#1e88e5',
@@ -116,12 +127,12 @@ const styles = StyleSheet.create({
   },
   subject_title: {
     fontSize: 20,
-    color:'#fff',
+    color: '#fff',
     padding: 5,
     fontWeight: 'bold'
   },
   header_specs_container: {
-    display:'none',
+    display: 'none',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%'
@@ -149,22 +160,22 @@ const styles = StyleSheet.create({
   scene: {
     flex: 1,
   },
-  notebook_item:{
-    flexDirection:'row-reverse',
-    justifyContent:'space-between',
-    alignItems:'center',
-    padding:10,
-    backgroundColor:'rgba(255,255,255,0.85)',
-    borderBottomWidth:1,
-    borderColor:'rgba(0,0,0,0.085)',
+  notebook_item: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    borderBottomWidth: 1,
+    borderColor: 'rgba(0,0,0,0.085)',
   },
-  notebook_item_author_name:{
-    color:'#fff',
-    backgroundColor:'#1e88e5',
-    fontSize:12,
-    borderRadius:20,
-    paddingVertical:4,
-    paddingHorizontal:7,
+  notebook_item_author_name: {
+    color: '#fff',
+    backgroundColor: '#1e88e5',
+    fontSize: 12,
+    borderRadius: 20,
+    paddingVertical: 4,
+    paddingHorizontal: 7,
   }
 });
 
