@@ -6,11 +6,15 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
-  TextInput
+  TextInput,
+  // Button
 } from 'react-native';
 import common_styles, { style_objects } from '../../common/styles/common_styles';
 import SubjectItem from './components/subject_component';
 import { Icon } from 'react-native-elements';
+import { DrawerActions } from 'react-navigation-drawer'
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+// import { DrawerActions } from '@react-navigation/routers';
 
 class SubjectsList extends React.Component {
   constructor(props) {
@@ -27,8 +31,14 @@ class SubjectsList extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'المواد الدراسية',
+      headerRight: () => (
+        <TouchableNativeFeedback containerStyle={{marginRight:20}} onPress={()=>navigation.dispatch(DrawerActions.openDrawer())}>
+          <Icon name='menu' containerStyle={{}} size={22} type='MaterialCommunityIcons' color={common_styles.colors.main_light_color} />
+        </TouchableNativeFeedback>
+      ),
     };
   };
+  
 
   async _get_all_subjects() {
     this.setState({ loading: true });
@@ -71,7 +81,7 @@ class SubjectsList extends React.Component {
       <View style={styles.main_container}>
         <View style={styles.search_container}>
           <Icon name='search' type='FontAwesome' color={this.state.search_string.length > 0 ? common_styles.colors.main_color : 'rgba(0,0,0,0.15)'} />
-          <TextInput placeholder='ابحث عن المادة . . .' style={{ padding: 0, flex: 1, textAlign: 'right' }} value={search_string} onChangeText={(text) => this.search(text)} />
+          <TextInput placeholder='ابحث عن اسم المادة . .' style={{ padding: 0, flex: 1, textAlign: 'right' }} value={search_string} onChangeText={(text) => this.search(text)} />
         </View>
         <ActivityIndicator style={{ display: loading ? 'flex' : 'none' }} animating={this.state.loading} size={24} color={common_styles.colors.main_color} />
         <FlatList
