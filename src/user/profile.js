@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   StyleSheet,
@@ -6,10 +5,13 @@ import {
   View,
   TextInput,
   Picker,
+  TouchableNativeFeedback,
+  TouchableOpacity
 } from 'react-native';
 import common_styles, { style_objects } from '../../common/styles/common_styles';
 import Button from '../../common/components/button';
 import AsyncStorage from '@react-native-community/async-storage';
+import { DrawerActions } from 'react-navigation-drawer'
 import { Icon } from 'react-native-elements';
 
 export default class Profile extends React.Component {
@@ -17,8 +19,8 @@ export default class Profile extends React.Component {
     super(props);
     this.state = {
       name: '',
-      level: 'السنة الدراسية',
-      major: 'التخصص'
+      level: '',
+      major: ''
     }
     this.saveUserInfo = this.saveUserInfo.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
@@ -45,7 +47,6 @@ export default class Profile extends React.Component {
       let userInfo = await AsyncStorage.getItem('userInfo');
       if (userInfo != null) {
         let userInfoObject = JSON.parse(userInfo);
-        console.log('name : ' + userInfoObject.name + ' \nlevel :' + userInfoObject.level + ' \nmajor :' + userInfoObject.major);
         this.setState({
           name: userInfoObject.name,
           major: userInfoObject.major,
@@ -64,6 +65,9 @@ export default class Profile extends React.Component {
   render() {
     return (
       <View style={styles.main_container}>
+        <TouchableOpacity style={{ position: 'absolute', top: 20, right: 20 }} onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
+          <Icon name='menu' containerStyle={{}} size={22} type='MaterialCommunityIcons' color={common_styles.colors.main_light_color} />
+        </TouchableOpacity>
         <View>
           <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
             <Icon reverse iconStyle={{ color: common_styles.colors.main_light_color }} name='user' color={common_styles.colors.main_color} type='antdesign' size={60} />
@@ -74,6 +78,7 @@ export default class Profile extends React.Component {
           </View>
           <View style={styles.picker_container}>
             <Picker mode='dropdown' itemStyle={{ color: 'red' }} prompt='السنة الدراسية' style={styles.input} selectedValue={this.state.level} onValueChange={(text) => this.setState({ level: text })} >
+              <Picker.Item label='السنة الدراسية ..' value={null} />
               <Picker.Item label='أولى' value={1} />
               <Picker.Item label='ثانية' value={2} />
               <Picker.Item label='ثالثه' value={3} />
@@ -83,7 +88,7 @@ export default class Profile extends React.Component {
           </View>
           <View style={styles.picker_container}>
             <Picker mode='dropdown' style={styles.input} selectedValue={this.state.major} onValueChange={(text) => this.setState({ major: text })} >
-              <Picker.Item label='اختر التخصص' value='null' />
+              <Picker.Item label='التخصص ..' value={null} />
               <Picker.Item label='علم حاسوب' value='CS' />
               <Picker.Item label='أنظمة معلومات حاسوبية' value='CIS' />
               <Picker.Item label='تكنولوجيا معلومات الأعمال' value='BIT' />
@@ -100,8 +105,8 @@ export default class Profile extends React.Component {
 const styles = StyleSheet.create({
   main_container: {
     ...style_objects.main_container,
-    justifyContent:'space-between',
-    alignItems:'center'
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   field_container: {
     width: '100%',
@@ -118,8 +123,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 15,
-    borderTopStartRadius:10,
-    borderBottomStartRadius:10
+    borderTopStartRadius: 10,
+    borderBottomStartRadius: 10
   },
   picker_container: {
     width: '100%',

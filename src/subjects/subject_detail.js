@@ -57,7 +57,7 @@ class SubjectDetailView extends React.Component {
       const testbanks = () => (
         <FlatList
           style={styles.testbanks_container}
-          data={subject_object.testbank}
+          data={subject_object.testbanks}
           renderItem={({ item }) =>
             <TestbankFile object={item} />
           }
@@ -68,7 +68,7 @@ class SubjectDetailView extends React.Component {
       const notebooks = () => (
         <FlatList
           style={styles.notebooks_container}
-          data={subject_object.notebook}
+          data={subject_object.notebooks}
           renderItem={({ item }) =>
             <NotebookFile object={item} />
           }

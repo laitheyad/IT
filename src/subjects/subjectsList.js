@@ -1,9 +1,7 @@
 import React from 'react';
 import {
   StyleSheet,
-  Text,
   View,
-  TouchableOpacity,
   FlatList,
   ActivityIndicator,
   TextInput,
@@ -14,13 +12,13 @@ import SubjectItem from './components/subject_component';
 import { Icon } from 'react-native-elements';
 import { DrawerActions } from 'react-navigation-drawer'
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
-// import { DrawerActions } from '@react-navigation/routers';
 
 class SubjectsList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       subjects: [],
+      searched_subjects: [],
       loading: false,
       search_string: '',
     };
@@ -32,13 +30,12 @@ class SubjectsList extends React.Component {
     return {
       title: 'المواد الدراسية',
       headerRight: () => (
-        <TouchableNativeFeedback containerStyle={{marginRight:20}} onPress={()=>navigation.dispatch(DrawerActions.openDrawer())}>
+        <TouchableNativeFeedback containerStyle={{ marginRight: 20 }} onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
           <Icon name='menu' containerStyle={{}} size={22} type='MaterialCommunityIcons' color={common_styles.colors.main_light_color} />
         </TouchableNativeFeedback>
       ),
     };
   };
-  
 
   async _get_all_subjects() {
     this.setState({ loading: true });
@@ -75,17 +72,35 @@ class SubjectsList extends React.Component {
     })
   }
 
+  local_search(text) {
+    this.setState({ search_string: text });
+    const subjects_list = this.state.subjects,
+      searched_subjects_list = [];
+    for (let i = 0; i < subjects_list.length; i++) {
+      if (subjects_list[i].name.includes(text)) {
+        searched_subjects_list.push(subjects_list[i]);
+      }
+    }
+    this.setState({ searched_subjects: searched_subjects_list })
+  }
+
   render() {
     const { loading, search_string } = this.state;
     return (
       <View style={styles.main_container}>
         <View style={styles.search_container}>
-          <Icon name='search' type='FontAwesome' color={this.state.search_string.length > 0 ? common_styles.colors.main_color : 'rgba(0,0,0,0.15)'} />
-          <TextInput placeholder='ابحث عن اسم المادة . .' style={{ padding: 0, flex: 1, textAlign: 'right' }} value={search_string} onChangeText={(text) => this.search(text)} />
+          {
+            this.state.search_string.length > 0 ?
+              <Icon name='cancel' onPress={()=>this.local_search('')} type='MaterialIcons' color={common_styles.colors.main_color} />
+              :
+              <Icon name='search' type='FontAwesome' color='rgba(0,0,0,0.15)' />
+
+          }
+          <TextInput placeholder='ابحث عن اسم المادة . .' style={{ padding: 0, flex: 1, textAlign: 'right' }} value={search_string} onChangeText={(text) => this.local_search(text)} />
         </View>
         <ActivityIndicator style={{ display: loading ? 'flex' : 'none' }} animating={this.state.loading} size={24} color={common_styles.colors.main_color} />
         <FlatList
-          data={this.state.subjects}
+          data={this.state.searched_subjects.length > 0 ? this.state.searched_subjects : this.state.subjects}
           renderItem={({ item }) =>
             <SubjectItem {...this.props} pk={item.pk} name={item.name} major={item.major} level={item.level} />
           }
