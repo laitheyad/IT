@@ -1,7 +1,9 @@
 const common_styles = {
     colors:{
         main_back_color:'#2c3e50',
-        main_color:'#2980b9'
+        main_back_color_light:'#34495e',
+        main_color:'#2980b9',
+        main_light_color:'#ecf0f1',
     }
 }
 

@@ -5,11 +5,13 @@ import {
   View,
   FlatList,
   Dimensions,
+  ActivityIndicator
 } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Icon } from 'react-native-elements';
-import TestbankFile from './components/testbank'
-import NotebookFile from './components/notebook'
+import NotebookFile, { TestbankFile } from './components/fileItem'
+import common_styles from '../../common/styles/common_styles';
+
 class SubjectDetailView extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +25,12 @@ class SubjectDetailView extends React.Component {
       subject_id: null
     };
   }
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.getParam('title', ''),
+    };
+  };
 
   componentDidMount() {
     this.setState({ subject_id: this.props.navigation.getParam('subject_id', null) }, async () => {
@@ -38,44 +46,58 @@ class SubjectDetailView extends React.Component {
           console.log(error);
         }
       }
+      this.props.navigation.setParams({ title: this.state.subject_object.name });
     });
+
   }
 
   render() {
-    const {subject_object} = this.state;
+    const { subject_object } = this.state;
     if (this.state.subject_object != null) {
       const testbanks = () => (
         <FlatList
-        style={[styles.scene, { backgroundColor: 'rgba(0,0,0,0.05)' }]}
-        data={subject_object.testbank}
-        renderItem={({item})=>
-          <TestbankFile object={item} />
-        }
-        keyExtractor={(item) => item.pk.toString()}
+          style={styles.testbanks_container}
+          data={subject_object.testbank}
+          renderItem={({ item }) =>
+            <TestbankFile object={item} />
+          }
+          keyExtractor={(item) => item.pk.toString()}
         />
       );
-      
+
       const notebooks = () => (
         <FlatList
-        style={[styles.scene, { backgroundColor: 'rgba(0,0,0,0.05)' }]}
-        data={subject_object.notebook}
-        renderItem={({item})=>
-          <NotebookFile object={item} />
-        }
-        keyExtractor={(item) => item.pk.toString()}
+          style={styles.notebooks_container}
+          data={subject_object.notebook}
+          renderItem={({ item }) =>
+            <NotebookFile object={item} />
+          }
+          keyExtractor={(item) => item.pk.toString()}
         />
       );
+
       return (
         <View style={styles.main_container}>
-          <View style={[styles.header_container, { display: 'flex' }]}>
-            <Text style={styles.subject_title}>{subject_object.name}</Text>
-            <View style={styles.header_specs_container}>
-              <Text style={styles.header_specs}>سنه ثالثه</Text>
-              <Text style={styles.header_specs}>1902342</Text>
-              <Text style={styles.header_specs}>حفظ</Text>
-            </View>
+          <View style={styles.subject_number_container}>
+            <Text style={styles.subject_number}>{subject_object.subject_number}</Text>
           </View>
           <View style={[styles.content_container, { display: 'flex' }]}>
+            <View style={styles.header_container}>
+              <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: common_styles.colors.main_color, paddingVertical: 4, paddingHorizontal: 8, borderRadius: 20, }}>
+                  <Icon name='fork' containerStyle={{ marginLeft: 2 }} size={14} color={common_styles.colors.main_light_color} type='antdesign' />
+                  <Text style={{ color: common_styles.colors.main_light_color, }}>مستوى المادة</Text>
+                </View>
+                <Text style={{ color: common_styles.colors.main_light_color, marginRight: 5 }}>{subject_object.level}</Text>
+              </View>
+              <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: common_styles.colors.main_color, paddingVertical: 4, paddingHorizontal: 8, borderRadius: 20, }}>
+                  <Icon name='fork' containerStyle={{ marginLeft: 2 }} size={14} color={common_styles.colors.main_light_color} type='antdesign' />
+                  <Text style={{ color: common_styles.colors.main_light_color, }}>القسم</Text>
+                </View>
+                <Text style={{ color: common_styles.colors.main_light_color, marginRight: 5 }}>{subject_object.major.name}</Text>
+              </View>
+            </View>
             <View style={styles.desc_container}>
               <Text style={styles.desc_container_text}>{subject_object.description}</Text>
             </View>
@@ -83,12 +105,14 @@ class SubjectDetailView extends React.Component {
               <TabView
                 renderTabBar={props =>
                   <TabBar
-                    activeColor="#fff"
-                    inactiveColor="rgba(0,0,0,0.3)"
-                    style={{ backgroundColor: '#1e88e5', elevation: 0 }}
-                    indicatorStyle={{ backgroundColor: '#fff', height: 3 }}
+                    pressColor={common_styles.colors.main_back_color}
+                    activeColor={common_styles.colors.main_light_color}
+                    inactiveColor={"rgba(0,0,0,0.3)"}
+                    style={{ backgroundColor: common_styles.colors.main_color, elevation: 0 }}
+                    indicatorStyle={{ backgroundColor: common_styles.colors.main_light_color, height: 3 }}
                     {...props}
-                  />}
+                  />
+                }
                 swipeEnabled={true}
                 navigationState={this.state}
                 renderScene={SceneMap({
@@ -104,40 +128,53 @@ class SubjectDetailView extends React.Component {
       );
     }
     else return (
-      <View><Text>fuck off</Text></View>
+      <View style={[styles.content_container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size='large' color={common_styles.colors.main_color} />
+      </View>
     )
   }
 };
 
 const styles = StyleSheet.create({
   main_container: {
+    backgroundColor: common_styles.colors.main_back_color,
     flex: 1
   },
   content_container: {
+    backgroundColor: common_styles.colors.main_back_color,
     padding: 15,
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.04)'
+  },
+  subject_number_container:{
+    paddingVertical:4,
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'rgba(0,0,0,0.2)'
+  },
+  subject_number:{
+    color:common_styles.colors.main_light_color
   },
   header_container: {
-    backgroundColor: '#1e88e5',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    padding: 10,
-    width: '100%'
+    width: '100%',
+    marginBottom: 15,
   },
   subject_title: {
-    fontSize: 20,
-    color: '#fff',
+    fontSize: 19,
+    color: common_styles.colors.main_light_color,
     padding: 5,
     fontWeight: 'bold'
   },
   header_specs_container: {
-    display: 'none',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    direction: 'rtl',
+    justifyContent: 'flex-end',
     width: '100%'
   },
   header_specs: {
+    color: common_styles.colors.main_light_color,
     paddingVertical: 4,
     paddingHorizontal: 8,
     backgroundColor: 'rgba(0,0,0,0.15)',
@@ -146,11 +183,18 @@ const styles = StyleSheet.create({
   },
   desc_container: {
     padding: 10,
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: common_styles.colors.main_back_color_light,
     borderRadius: 6,
     marginBottom: 15
   },
   desc_container_text: {
+    color: common_styles.colors.main_light_color
+  },
+  testbanks_container: {
+    backgroundColor: common_styles.colors.main_back_color_light
+  },
+  notebooks_container: {
+    backgroundColor: common_styles.colors.main_back_color_light
   },
   tabs_container: {
     flex: 1,
@@ -160,23 +204,6 @@ const styles = StyleSheet.create({
   scene: {
     flex: 1,
   },
-  notebook_item: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: 'rgba(255,255,255,0.85)',
-    borderBottomWidth: 1,
-    borderColor: 'rgba(0,0,0,0.085)',
-  },
-  notebook_item_author_name: {
-    color: '#fff',
-    backgroundColor: '#1e88e5',
-    fontSize: 12,
-    borderRadius: 20,
-    paddingVertical: 4,
-    paddingHorizontal: 7,
-  }
 });
 
 export default SubjectDetailView;

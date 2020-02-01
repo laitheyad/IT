@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet,Text,View,TouchableNativeFeedback, TouchableOpacity} from 'react-native';
-import {Icon} from 'react-native-elements';
+import { StyleSheet, Text, View, TouchableNativeFeedback, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
+import common_styles from '../../../common/styles/common_styles';
 
 export default class SubjectItem extends React.Component {
   constructor(props) {
@@ -9,52 +10,46 @@ export default class SubjectItem extends React.Component {
     };
   }
 
-  componentDidMount(){
-  }
-
   render() {
-    const {pk, name, major, level} = this.props;
-    console.log(this.props)
+    const { pk, name, major, level } = this.props;
     return (
-        <TouchableOpacity style={styles.notebook_item} onPress={()=>this.props.navigation.navigate('subject_detail',{
-            subject_id:pk
-        })}>
-            <View style={{flexDirection:'row-reverse',alignItems:'center',justifyContent:'space-between',flex:1}}>
-                <View style={{flexDirection:'row',alignItems:'center'}}>
-                <Text style={{marginRight:10,color:'#414649'}}>{name}</Text>
-                <Icon color='#5F6368' name='pdffile1' size={17} type='antdesign' />
-                </View>
-                <View>
-                    <Text style={styles.notebook_item_author_name}>{major.name}</Text>
-                </View>
+      <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('subject_detail', {
+        subject_id: pk
+      })}>
+        <View style={styles.item_container}>
+          <View style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={{ marginRight: 10, color: common_styles.colors.main_light_color, }}>{name}</Text>
+              <Icon color='#21303f' name='book' size={18} type='antdesign' />
             </View>
-            <View style={{marginRight:10}}>
-                <Icon color='rgba(0,0,0,0.8)' name='download' size={17} type='antdesign' />
-            </View>
-        </TouchableOpacity>
+            <Text style={styles.subject_major}>{major.name}</Text>
+          </View>
+          <View style={{ marginRight: 10 }}>
+            <Icon color='#21303f' name='left' size={17} type='antdesign' />
+          </View>
+        </View>
+      </TouchableNativeFeedback>
     );
   }
 };
 
 const styles = StyleSheet.create({
-  main_container: {
-    flex: 1
+  item_container: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 11,
+    paddingHorizontal: 12,
+    backgroundColor: common_styles.colors.main_back_color_light,
+    marginTop: 7,
+    borderRadius: 6,
   },
-  notebook_item:{
-    flexDirection:'row-reverse',
-    justifyContent:'space-between',
-    alignItems:'center',
-    padding:10,
-    backgroundColor:'#ecf0f1',
-    borderBottomWidth:1,
-    borderColor:'#34495e',
-  },
-  subject_major:{
-    color:'#fff',
-    backgroundColor:'#1e88e5',
-    fontSize:12,
-    borderRadius:20,
-    paddingVertical:4,
-    paddingHorizontal:7,
+  subject_major: {
+    color: '#fff',
+    backgroundColor: common_styles.colors.main_color,
+    fontSize: 12,
+    borderRadius: 20,
+    paddingVertical: 3,
+    paddingHorizontal: 7,
   }
 });
