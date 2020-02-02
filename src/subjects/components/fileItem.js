@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: common_styles.colors.main_light_color,
     borderBottomWidth: 1,
-    borderColor: 'rgba(0,0,0,0.05)',
+    borderColor: '#ddd',
   },
   notebook_item_author_name: {
     color: '#fff',

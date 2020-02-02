@@ -2,6 +2,7 @@ import React from 'react';
 import {
   StyleSheet,
   View,
+  Text,
   FlatList,
   ActivityIndicator,
   TextInput,
@@ -22,9 +23,10 @@ class SubjectsList extends React.Component {
       loading: false,
       search_string: '',
     };
-    this.search = this.search.bind(this);
     this._get_all_subjects = this._get_all_subjects.bind(this);
   }
+
+  _isMounted = false;
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -43,7 +45,7 @@ class SubjectsList extends React.Component {
       await fetch('http://laitheyad1.pythonanywhere.com/subjects/')
         .then((response) => response.json())
         .then((responseJson) => {
-          this.setState({ subjects: responseJson }, () => console.log(this.state.subjects))
+          this.setState({ subjects: responseJson, searched_subjects:responseJson }, () => console.log(this.state.subjects))
         });
     }
     catch (error) {
@@ -53,24 +55,27 @@ class SubjectsList extends React.Component {
   }
 
   componentDidMount() {
-    this._get_all_subjects();
+    this._isMounted = true;
+    if (this._isMounted == true) {
+      this._get_all_subjects();
+    }
   }
 
-  async search(text) {
-    this.setState({ search_string: text, loading: true }, async () => {
-      try {
-        await fetch('http://laitheyad1.pythonanywhere.com/subjects/?search=' + text)
-          .then((response) => response.json())
-          .then((responseJson) => {
-            this.setState({ subjects: responseJson }, () => console.log('search_results', this.state.subjects))
-          });
-      }
-      catch (error) {
-        console.error(error);
-      }
-      this.setState({ loading: false })
-    })
-  }
+  // async search(text) {
+  //   this.setState({ search_string: text, loading: true }, async () => {
+  //     try {
+  //       await fetch('http://laitheyad1.pythonanywhere.com/subjects/?search=' + text)
+  //         .then((response) => response.json())
+  //         .then((responseJson) => {
+  //           this.setState({ subjects: responseJson }, () => console.log('search_results', this.state.subjects))
+  //         });
+  //     }
+  //     catch (error) {
+  //       console.error(error);
+  //     }
+  //     this.setState({ loading: false })
+  //   })
+  // }
 
   local_search(text) {
     this.setState({ search_string: text });
@@ -84,14 +89,29 @@ class SubjectsList extends React.Component {
     this.setState({ searched_subjects: searched_subjects_list })
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   render() {
     const { loading, search_string } = this.state;
+    const No_result_found = () => (
+      <View>
+        {
+          !this.state.loading &&
+          <View style={{ alignSelf: 'center', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
+            <Icon name='frowno' color={common_styles.colors.main_back_color_d1} size={45} type='antdesign' />
+            <Text style={{ fontSize: 20, textAlign: 'center', color: common_styles.colors.main_back_color_d1, fontWeight: 'bold', marginTop: 4 }}>{'لا يوجد اي مواد\n مطابقة لذلك الأسم.'}</Text>
+          </View>
+        }
+      </View>
+    )
     return (
       <View style={styles.main_container}>
         <View style={styles.search_container}>
           {
             this.state.search_string.length > 0 ?
-              <Icon name='cancel' onPress={()=>this.local_search('')} type='MaterialIcons' color={common_styles.colors.main_color} />
+              <Icon name='cancel' onPress={() => this.local_search('')} type='MaterialIcons' color={common_styles.colors.main_color} />
               :
               <Icon name='search' type='FontAwesome' color='rgba(0,0,0,0.15)' />
 
@@ -100,11 +120,12 @@ class SubjectsList extends React.Component {
         </View>
         <ActivityIndicator style={{ display: loading ? 'flex' : 'none' }} animating={this.state.loading} size={24} color={common_styles.colors.main_color} />
         <FlatList
-          data={this.state.searched_subjects.length > 0 ? this.state.searched_subjects : this.state.subjects}
+          data={this.state.searched_subjects}
           renderItem={({ item }) =>
             <SubjectItem {...this.props} pk={item.pk} name={item.name} major={item.major} level={item.level} />
           }
           keyExtractor={(item) => item.pk.toString()}
+          ListEmptyComponent={<No_result_found />}
         />
       </View>
     );

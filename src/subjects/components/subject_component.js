@@ -22,9 +22,11 @@ export default class SubjectItem extends React.Component {
                 <Text style={{ marginRight: 10, color: common_styles.colors.main_light_color, }}>{name}</Text>
               <Icon color='#21303f' name='book' size={18} type='antdesign' />
             </View>
+            <TouchableOpacity onPress={()=>alert('hi')}>
             <Text style={styles.subject_major}>{major.name}</Text>
+            </TouchableOpacity>
           </View>
-          <View style={{ marginRight: 10 }}>
+          <View style={{ marginRight: 5 }}>
             <Icon color='#21303f' name='left' size={17} type='antdesign' />
           </View>
         </View>
@@ -51,5 +53,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 3,
     paddingHorizontal: 7,
+    
   }
 });
