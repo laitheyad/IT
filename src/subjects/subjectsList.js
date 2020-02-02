@@ -5,6 +5,7 @@ import {
   Text,
   FlatList,
   ActivityIndicator,
+  TouchableHighlight,
   TextInput,
   // Button
 } from 'react-native';
@@ -12,7 +13,17 @@ import common_styles, { style_objects } from '../../common/styles/common_styles'
 import SubjectItem from './components/subject_component';
 import { Icon } from 'react-native-elements';
 import { DrawerActions } from 'react-navigation-drawer'
-import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
+import Swipeable from 'react-native-swipeable';
+
+// const leftContent = <Text>Pull to activate</Text>;
+
+const rightButtons =
+    <TouchableOpacity onPress={() => console.log('s')} style={{alignItems: 'center', justifyContent: 'center', width: 75, height: '100%' }}>
+      <Icon name='plus' type='antdesign' size={18} color={common_styles.colors.main_light_color} />
+      <Text style={{color:common_styles.colors.main_light_color}}>اضافة</Text>
+    </TouchableOpacity>
+  ;
 
 class SubjectsList extends React.Component {
   constructor(props) {
@@ -45,7 +56,7 @@ class SubjectsList extends React.Component {
       await fetch('http://laitheyad1.pythonanywhere.com/subjects/')
         .then((response) => response.json())
         .then((responseJson) => {
-          this.setState({ subjects: responseJson, searched_subjects:responseJson }, () => console.log(this.state.subjects))
+          this.setState({ subjects: responseJson, searched_subjects: responseJson })
         });
     }
     catch (error) {
@@ -122,7 +133,9 @@ class SubjectsList extends React.Component {
         <FlatList
           data={this.state.searched_subjects}
           renderItem={({ item }) =>
-            <SubjectItem {...this.props} pk={item.pk} name={item.name} major={item.major} level={item.level} />
+            <Swipeable style={{ flex: 1, height: '100%', marginTop: 7 }} rightContent={rightButtons} onRightActionRelease={()=>console.log(item)} rightContentContainerStyle={{ flex: 1 }}>
+              <SubjectItem {...this.props} pk={item.pk} name={item.name} major={item.major} level={item.level} />
+            </Swipeable>
           }
           keyExtractor={(item) => item.pk.toString()}
           ListEmptyComponent={<No_result_found />}

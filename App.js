@@ -18,13 +18,13 @@ const MainNavigator = createDrawerNavigator({
       title: 'المواد كافة',
     }),
   },
-  // GPACalculator:{
-  //   screen:gpaCalculator,
-  //   navigationOptions: ({ navigation }) => ({
-  //     title: 'حساب المعدل',
+  GPACalculator:{
+    screen:gpaCalculator,
+    navigationOptions: ({ navigation }) => ({
+      title: 'حساب المعدل',
       
-  //   }),
-  // },
+    }),
+  },
   
 },{
   initialRouteName:'subjectsList',

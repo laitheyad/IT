@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
     paddingHorizontal: 12,
     backgroundColor: common_styles.colors.main_back_color_light,
-    marginTop: 7,
     borderRadius: 6,
   },
   subject_major: {

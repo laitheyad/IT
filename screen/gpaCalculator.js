@@ -8,10 +8,15 @@ import {
   TouchableOpacity,
   TextInput,
   Picker,
-  FlatList
+  FlatList,
+
 } from 'react-native';
 import Modal from 'react-native-modalbox'
-
+import common_style, { style_objects } from '../common/styles/common_styles'
+import Button from '../common/components/button'
+import { Icon } from 'react-native-elements';
+import common_styles from '../common/styles/common_styles';
+import { DrawerActions } from 'react-navigation-drawer'
 
 class gpaCalculator extends React.Component {
   constructor(props) {
@@ -21,236 +26,240 @@ class gpaCalculator extends React.Component {
       fullGPA: '',
       semesterHours: '',
       modalVisible: true,
-      m1:null,
-      m2:null,
-      m3:null,
-      m4:null,
-      m5:null,
-      m6:null,
-      m7:null,
-      h1:3,
-      h2:3,
-      h3:3,
-      h4:3,
-      h5:3,
-      h6:3,
-      h7:3,
+      m1: null,
+      m2: null,
+      m3: null,
+      m4: null,
+      m5: null,
+      m6: null,
+      m7: null,
+      h1: 3,
+      h2: 3,
+      h3: 3,
+      h4: 3,
+      h5: 3,
+      h6: 3,
+      h7: 3,
     }
     this.calculate = this.calculate.bind(this);
   }
 
 
-  calculate(){
-   
+  calculate() {
+
     let oldGPA = this.state.Allhours * this.state.fullGPA;
     let Allhours = parseInt(this.state.Allhours);
     let newGPA = 0;
     let counter = 0;
-    if(this.state.m1 != null ){
-      newGPA+=this.state.m1*this.state.h1;
-      counter+=this.state.h1;
+    if (this.state.m1 != null) {
+      newGPA += this.state.m1 * this.state.h1;
+      counter += this.state.h1;
     }
-    if(this.state.m2 != null){
-      newGPA+=this.state.m2*this.state.h2;
-      counter+=this.state.h2;
+    if (this.state.m2 != null) {
+      newGPA += this.state.m2 * this.state.h2;
+      counter += this.state.h2;
 
     }
-    if(this.state.m3 != null ){
-      newGPA+=this.state.m3*this.state.h3;
-      counter+=this.state.h3
+    if (this.state.m3 != null) {
+      newGPA += this.state.m3 * this.state.h3;
+      counter += this.state.h3
 
     }
-    if(this.state.m4 != null ){
-      newGPA+=this.state.m4*this.state.h4;
-      counter+=this.state.h4
+    if (this.state.m4 != null) {
+      newGPA += this.state.m4 * this.state.h4;
+      counter += this.state.h4
 
     }
-    if(this.state.m5 != null){
-      newGPA+=this.state.m5*this.state.h5;
-      counter+=this.state.h5
+    if (this.state.m5 != null) {
+      newGPA += this.state.m5 * this.state.h5;
+      counter += this.state.h5
 
     }
-    if(this.state.m6 != null){
-      newGPA+=this.state.m6*this.state.h6;
-      counter+=this.state.h6
+    if (this.state.m6 != null) {
+      newGPA += this.state.m6 * this.state.h6;
+      counter += this.state.h6
 
     }
-    if(this.state.m7 != null){
-      newGPA+=this.state.m7*this.state.h7;
-      counter+=this.state.h7
+    if (this.state.m7 != null) {
+      newGPA += this.state.m7 * this.state.h7;
+      counter += this.state.h7
 
     }
-    let semGPA=newGPA/counter;
-    let fullGPA=(oldGPA+newGPA)/(counter+Allhours);
+    let semGPA = newGPA / counter;
+    let fullGPA = (oldGPA + newGPA) / (counter + Allhours);
     alert(fullGPA)
   }
 
   render() {
-    const markOptions=
-    [
-      {
-        label: 'اختر العلامه',
-        value: null
-      },
-      {
-        label: 'أ',
-        value: 4
-      },
-      {
-        label: '-أ',
-        value: 3.75
-      },
-      {
-        label: '+ب',
-        value: 3.5
-      },
-      {
-        label: 'ب',
-        value: 3
-      },
-      {
-        label: '-ب',
-        value: 2.75
-      },
-      {
-        label: '+ج',
-        value: 2.5
-      },
-      {
-        label: 'ج',
-        value: 2
-      },
-      {
-        label: '-ج',
-        value: 1.75
-      },
-      {
-        label: '+د',
-        value: 1.5
-      },
-      {
-        label: 'د',
-        value: 1
-      },
-      {
-        label: '-د',
-        value: 0.75
-      },
-      {
-        label: 'هـ',
-        value: 0
-      },
-    ]
+    const markOptions =
+      [
+        {
+          label: 'اختر العلامه',
+          value: null
+        },
+        {
+          label: 'أ',
+          value: 4
+        },
+        {
+          label: '-أ',
+          value: 3.75
+        },
+        {
+          label: '+ب',
+          value: 3.5
+        },
+        {
+          label: 'ب',
+          value: 3
+        },
+        {
+          label: '-ب',
+          value: 2.75
+        },
+        {
+          label: '+ج',
+          value: 2.5
+        },
+        {
+          label: 'ج',
+          value: 2
+        },
+        {
+          label: '-ج',
+          value: 1.75
+        },
+        {
+          label: '+د',
+          value: 1.5
+        },
+        {
+          label: 'د',
+          value: 1
+        },
+        {
+          label: '-د',
+          value: 0.75
+        },
+        {
+          label: 'هـ',
+          value: 0
+        },
+      ]
 
-    const hoursOptions=[3,2,1]
+    const hoursOptions = [3, 2, 1]
 
     return (
-      <View style={styles.main_container}>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <View style={styles.container}>
-              <TextInput placeholder="المعدل التراكمي" underlineColorAndroid='transparent' keyboardType={'numeric'}
-                value={this.state.fullGPA} style={{ width: 300, textAlign: 'right' }} onChangeText={(text) => this.setState({ fullGPA: parseFloat(text) })} />
-            </View>
-            <View style={styles.container}>
-              <TextInput placeholder="الساعات المقطوعه" underlineColorAndroid='transparent' keyboardType={'numeric'}
-                value={this.state.Allhours} style={{ width: 300, textAlign: 'right' }} onChangeText={(text) => this.setState({ Allhours: parseInt(text,10) })} />
-            </View>
-          </View>
-      
-        <View style={styles.picker_container}>
-          <Picker style={styles.markPicker} selectedValue={this.state.m1} onValueChange={(text) => this.setState({ m1: text })} >
-          {markOptions.map((item, index) => {
-              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
-          })}
-          </Picker>
-          <Picker style={styles.hoursPicker} selectedValue={this.state.h1} onValueChange={(text) => this.setState({ h1: text })}>
-          {hoursOptions.map((item, index) => {
-              return (<Picker.Item  style={{textAlign:'right'}} label={item.toString()} value={item} key={index}/>) 
-          })}
-          </Picker>
-        </View>
-
-        <View style={styles.picker_container}>
-          <Picker style={styles.markPicker} selectedValue={this.state.m2} onValueChange={(text) => this.setState({ m2: text })} >
-          {markOptions.map((item, index) => {
-              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
-          })}
-          </Picker>
-          <Picker style={styles.hoursPicker} selectedValue={this.state.h2} onValueChange={(text) => this.setState({ h2: text })}>
-          {hoursOptions.map((item, index) => {
-              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
-          })}
-          </Picker>
-        </View>
-
-        <View style={styles.picker_container}>
-          <Picker style={styles.markPicker} selectedValue={this.state.m3} onValueChange={(text) => this.setState({ m3: text })} >
-          {markOptions.map((item, index) => {
-              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
-          })}
-          </Picker>
-          <Picker style={styles.hoursPicker} selectedValue={this.state.h3} onValueChange={(text) => this.setState({ h3: text })}>
-          {hoursOptions.map((item, index) => {
-              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
-          })}
-          </Picker>
-        </View>
-
-        <View style={styles.picker_container}>
-          <Picker style={styles.markPicker} selectedValue={this.state.m4} onValueChange={(text) => this.setState({ m4: text })} >
-          {markOptions.map((item, index) => {
-              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
-          })}
-          </Picker>
-          <Picker style={styles.hoursPicker} selectedValue={this.state.h4} onValueChange={(text) => this.setState({ h4: text })}>
-          {hoursOptions.map((item, index) => {
-              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
-          })}
-          </Picker>
-        </View>
-
-        <View style={styles.picker_container}>
-          <Picker style={styles.markPicker} selectedValue={this.state.m5} onValueChange={(text) => this.setState({ m5: text })} >
-          {markOptions.map((item, index) => {
-              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
-          })}
-          </Picker>
-          <Picker style={styles.hoursPicker} selectedValue={this.state.h5} onValueChange={(text) => this.setState({ h5: text })}>
-          {hoursOptions.map((item, index) => {
-              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
-          })}
-          </Picker>
-        </View>
-
-        <View style={styles.picker_container}>
-          <Picker style={styles.markPicker} selectedValue={this.state.m6} onValueChange={(text) => this.setState({ m6: text })} >
-          {markOptions.map((item, index) => {
-              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
-          })}
-          </Picker>
-          <Picker style={styles.hoursPicker} selectedValue={this.state.h6} onValueChange={(text) => this.setState({ h6: text })}>
-          {hoursOptions.map((item, index) => {
-              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
-          })}
-          </Picker>
-        </View>
-
-
-        <View style={styles.picker_container}>
-          <Picker style={styles.markPicker} selectedValue={this.state.m7} onValueChange={(text) => this.setState({ m7: text })} >
-          {markOptions.map((item, index) => {
-              return (<Picker.Item label={item.label} value={item.value} key={index}/>) 
-          })}
-          </Picker>
-          <Picker style={styles.hoursPicker} selectedValue={this.state.h7} onValueChange={(text) => this.setState({ h7: text })}>
-          {hoursOptions.map((item, index) => {
-              return (<Picker.Item label={item.toString()} value={item} key={index}/>) 
-          })}
-          </Picker>
-        </View>
-        <TouchableOpacity onPress={this.calculate}>
-          <Text style={styles.buttons}>Calculate</Text>
+      <View style={style_objects.main_container}>
+         <TouchableOpacity style={{ position: 'absolute', top: 20, right: 20 }} onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
+          <Icon name='menu' containerStyle={{}} size={22} type='MaterialCommunityIcons' color={common_styles.colors.main_light_color} />
         </TouchableOpacity>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <View style={styles.container, { borderBottomWidth: 1 }}>
+            <TextInput placeholderTextColor={common_styles.colors.main_light_color} placeholder="المعدل التراكمي" underlineColorAndroid='transparent' keyboardType={'numeric'}
+              value={this.state.fullGPA} style={{ width: 300, textAlign: 'center',color:common_styles.colors.main_light_color }} onChangeText={(text) => this.setState({ fullGPA: parseFloat(text) })} />
+          </View>
+          <View style={styles.container, { borderBottomWidth: 1 }}>
+            <TextInput placeholderTextColor={common_styles.colors.main_light_color} placeholder="الساعات المقطوعه" underlineColorAndroid='transparent' keyboardType={'numeric'}
+              value={this.state.Allhours} style={{ width: 300, textAlign: 'center' }} onChangeText={(text) => this.setState({ Allhours: parseInt(text, 10) })} />
+          </View>
+        </View>
+        <View style={{marginTop:20}}>
+          <View style={styles.picker_container}>
+            <Picker  style={[styles.markPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.m1} onValueChange={(text) => this.setState({ m1: text })} >
+              {markOptions.map((item, index) => {
+                return (<Picker.Item label={item.label} value={item.value} key={index} />)
+              })}
+            </Picker>
+            <Picker style={[styles.hoursPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.h1} onValueChange={(text) => this.setState({ h1: text })}>
+              {hoursOptions.map((item, index) => {
+                return (<Picker.Item style={{ textAlign: 'right' }} label={item.toString()} value={item} key={index} />)
+              })}
+            </Picker>
+          </View>
+
+          <View style={styles.picker_container}>
+            <Picker style={[styles.markPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.m2} onValueChange={(text) => this.setState({ m2: text })} >
+              {markOptions.map((item, index) => {
+                return (<Picker.Item label={item.label} value={item.value} key={index} />)
+              })}
+            </Picker>
+            <Picker style={[styles.hoursPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.h2} onValueChange={(text) => this.setState({ h2: text })}>
+              {hoursOptions.map((item, index) => {
+                return (<Picker.Item label={item.toString()} value={item} key={index} />)
+              })}
+            </Picker>
+          </View>
+
+          <View style={styles.picker_container}>
+            <Picker style={[styles.markPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.m3} onValueChange={(text) => this.setState({ m3: text })} >
+              {markOptions.map((item, index) => {
+                return (<Picker.Item label={item.label} value={item.value} key={index} />)
+              })}
+            </Picker>
+            <Picker style={[styles.hoursPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.h3} onValueChange={(text) => this.setState({ h3: text })}>
+              {hoursOptions.map((item, index) => {
+                return (<Picker.Item label={item.toString()} value={item} key={index} />)
+              })}
+            </Picker>
+          </View>
+
+          <View style={styles.picker_container}>
+            <Picker style={[styles.markPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.m4} onValueChange={(text) => this.setState({ m4: text })} >
+              {markOptions.map((item, index) => {
+                return (<Picker.Item label={item.label} value={item.value} key={index} />)
+              })}
+            </Picker>
+            <Picker style={[styles.hoursPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.h4} onValueChange={(text) => this.setState({ h4: text })}>
+              {hoursOptions.map((item, index) => {
+                return (<Picker.Item label={item.toString()} value={item} key={index} />)
+              })}
+            </Picker>
+          </View>
+        </View>
+        <View style={styles.picker_container}>
+          <Picker style={[styles.markPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.m5} onValueChange={(text) => this.setState({ m5: text })} >
+            {markOptions.map((item, index) => {
+              return (<Picker.Item label={item.label} value={item.value} key={index} />)
+            })}
+          </Picker>
+          <Picker style={[styles.hoursPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.h5} onValueChange={(text) => this.setState({ h5: text })}>
+            {hoursOptions.map((item, index) => {
+              return (<Picker.Item label={item.toString()} value={item} key={index} />)
+            })}
+          </Picker>
+        </View>
+
+        <View style={styles.picker_container}>
+          <Picker style={[styles.markPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.m6} onValueChange={(text) => this.setState({ m6: text })} >
+            {markOptions.map((item, index) => {
+              return (<Picker.Item label={item.label} value={item.value} key={index} />)
+            })}
+          </Picker>
+          <Picker style={[styles.hoursPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.h6} onValueChange={(text) => this.setState({ h6: text })}>
+            {hoursOptions.map((item, index) => {
+              return (<Picker.Item label={item.toString()} value={item} key={index} />)
+            })}
+          </Picker>
+        </View>
+
+
+        <View style={styles.picker_container}>
+          <Picker style={[styles.markPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.m7} onValueChange={(text) => this.setState({ m7: text })} >
+            {markOptions.map((item, index) => {
+              return (<Picker.Item label={item.label} value={item.value} key={index} />)
+            })}
+          </Picker>
+          <Picker style={[styles.hoursPicker,{color:common_styles.colors.main_light_color}]} selectedValue={this.state.h7} onValueChange={(text) => this.setState({ h7: text })}>
+            {hoursOptions.map((item, index) => {
+              return (<Picker.Item label={item.toString()} value={item} key={index} />)
+            })}
+          </Picker>
+        </View  >
+        <View style={{ marginTop: 25 }}>
+          <Button icon='calculator' label='إحسب' onPress={this.calculate} />
+        </View>
+
       </View>
     );
   }
@@ -258,15 +267,15 @@ class gpaCalculator extends React.Component {
 
 const styles = StyleSheet.create(
   {
-    main_container:{
-      padding:20
+    main_container: {
+      padding: 20
     },
     picker_container: {
-      flexDirection:'row',
-      justifyContent:'space-between',
-      alignItems:'center',
-      borderWidth:1,
-      borderColor:'rgba(0,0,0,0.1)'
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: 'rgba(0,0,0,0.1)'
     },
     Image: {
       marginTop: '10%',
@@ -296,11 +305,11 @@ const styles = StyleSheet.create(
       opacity: 0.5,
       fontSize: 20
     },
-    markPicker:{
-      width:'60%'
+    markPicker: {
+      width: '60%'
     },
-    hoursPicker:{
-      width:'40%',
+    hoursPicker: {
+      width: '40%',
     }
   }
 )
