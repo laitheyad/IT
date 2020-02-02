@@ -1,29 +1,19 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  FlatList,
-  ActivityIndicator,
-  TouchableHighlight,
-  TextInput,
-  // Button
-} from 'react-native';
+import { StyleSheet, View, Text, FlatList, ActivityIndicator, TextInput, } from 'react-native';
 import common_styles, { style_objects } from '../../common/styles/common_styles';
 import SubjectItem from './components/subject_component';
 import { Icon } from 'react-native-elements';
-import { DrawerActions } from 'react-navigation-drawer'
+import { DrawerActions } from 'react-navigation-drawer';
 import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import Swipeable from 'react-native-swipeable';
+import AsyncStorage from '@react-native-community/async-storage';
 
-// const leftContent = <Text>Pull to activate</Text>;
 
-const rightButtons =
-    <TouchableOpacity onPress={() => console.log('s')} style={{alignItems: 'center', justifyContent: 'center', width: 75, height: '100%' }}>
-      <Icon name='plus' type='antdesign' size={18} color={common_styles.colors.main_light_color} />
-      <Text style={{color:common_styles.colors.main_light_color}}>اضافة</Text>
-    </TouchableOpacity>
-  ;
+const rightContent =
+  <TouchableOpacity onPress={() => console.log('s')} style={{ alignItems: 'center', justifyContent: 'center', width: 75, height: '100%' }}>
+    <Icon name='plus' type='antdesign' size={18} color={common_styles.colors.main_light_color} />
+    <Text style={{ color: common_styles.colors.main_light_color }}>اضافة</Text>
+  </TouchableOpacity>
 
 class SubjectsList extends React.Component {
   constructor(props) {
@@ -37,7 +27,10 @@ class SubjectsList extends React.Component {
     this._get_all_subjects = this._get_all_subjects.bind(this);
   }
 
-  _isMounted = false;
+  async componentDidMount() {
+    await this._get_all_subjects();
+    await this.get_user_data();
+  }
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -49,6 +42,12 @@ class SubjectsList extends React.Component {
       ),
     };
   };
+
+  async get_user_data(){
+    let userInfo = await AsyncStorage.getItem('userInfo');
+    userInfo = JSON.parse(userInfo);
+    this.setState({user_object:userInfo})
+  }
 
   async _get_all_subjects() {
     this.setState({ loading: true });
@@ -63,13 +62,6 @@ class SubjectsList extends React.Component {
       console.log(error);
     }
     this.setState({ loading: false });
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-    if (this._isMounted == true) {
-      this._get_all_subjects();
-    }
   }
 
   // async search(text) {
@@ -100,8 +92,8 @@ class SubjectsList extends React.Component {
     this.setState({ searched_subjects: searched_subjects_list })
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
+  async add_subject(subject) {
+    i
   }
 
   render() {
@@ -133,7 +125,7 @@ class SubjectsList extends React.Component {
         <FlatList
           data={this.state.searched_subjects}
           renderItem={({ item }) =>
-            <Swipeable style={{ flex: 1, height: '100%', marginTop: 7 }} rightContent={rightButtons} onRightActionRelease={()=>console.log(item)} rightContentContainerStyle={{ flex: 1 }}>
+            <Swipeable style={{ flex: 1, height: '100%', marginTop: 7 }} rightContent={rightContent} onRightActionRelease={() => console.log(item)} rightContentContainerStyle={{ flex: 1 }}>
               <SubjectItem {...this.props} pk={item.pk} name={item.name} major={item.major} level={item.level} />
             </Swipeable>
           }
@@ -150,7 +142,6 @@ const styles = StyleSheet.create({
     ...style_objects.main_container
   },
   search_container: {
-    // backgroundColor: common_styles.colors.main_back_color
     backgroundColor: '#ecf0f1',
     borderRadius: 50,
     flexDirection: 'row',

@@ -20,7 +20,8 @@ export default class Profile extends React.Component {
     this.state = {
       name: '',
       level: '',
-      major: ''
+      major: '',
+      subjects: []
     }
     this.saveUserInfo = this.saveUserInfo.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
@@ -35,7 +36,8 @@ export default class Profile extends React.Component {
     let userObject = {
       name: this.state.name,
       level: this.state.level,
-      major: this.state.major
+      major: this.state.major,
+      subjects: this.state.subjects
     }
     await AsyncStorage.setItem('userInfo', JSON.stringify(userObject))
     this.props.navigation.navigate('subjectsList');
@@ -50,7 +52,8 @@ export default class Profile extends React.Component {
         this.setState({
           name: userInfoObject.name,
           major: userInfoObject.major,
-          level: userInfoObject.level
+          level: userInfoObject.level,
+          subjects: userInfoObject.subjects
         })
       }
       else {
