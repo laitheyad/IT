@@ -23,6 +23,7 @@ class SubjectsList extends React.Component {
       searched_subjects: [],
       loading: false,
       search_string: '',
+      userInfo: null
     };
     this._get_all_subjects = this._get_all_subjects.bind(this);
   }
@@ -43,10 +44,10 @@ class SubjectsList extends React.Component {
     };
   };
 
-  async get_user_data(){
+  async get_user_data() {
     let userInfo = await AsyncStorage.getItem('userInfo');
     userInfo = JSON.parse(userInfo);
-    this.setState({user_object:userInfo})
+    this.setState({ userInfo: userInfo })
   }
 
   async _get_all_subjects() {
@@ -93,8 +94,30 @@ class SubjectsList extends React.Component {
   }
 
   async add_subject(subject) {
-    i
+    if (this.state.userInfo != null) {
+      let userObject = this.state.userInfo;
+      if (userObject.subjects != undefined) {
+        userObject.subjects[subject.pk.toString()] = subject;
+      }
+      else {
+        userObject.subjects = {};
+        userObject.subjects[subject.pk.toString()] = subject;
+      }
+      try {
+        await AsyncStorage.setItem('userInfo', JSON.stringify(userObject));
+        console.log('subject added');
+      }
+      catch (error) {
+        console.log(error);
+      }
+    }
+    else {
+      this.props.navigation.navigate('User');
+    }
   }
+
+  // async remove_subject(subject) {
+  // }
 
   render() {
     const { loading, search_string } = this.state;
@@ -125,7 +148,7 @@ class SubjectsList extends React.Component {
         <FlatList
           data={this.state.searched_subjects}
           renderItem={({ item }) =>
-            <Swipeable style={{ flex: 1, height: '100%', marginTop: 7 }} rightContent={rightContent} onRightActionRelease={() => console.log(item)} rightContentContainerStyle={{ flex: 1 }}>
+            <Swipeable style={{ flex: 1, height: '100%', marginTop: 7 }} rightContent={rightContent} onRightActionRelease={() => this.add_subject(item)} rightContentContainerStyle={{ flex: 1 }}>
               <SubjectItem {...this.props} pk={item.pk} name={item.name} major={item.major} level={item.level} />
             </Swipeable>
           }
