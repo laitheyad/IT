@@ -17,7 +17,8 @@ import Button from '../common/components/button'
 import { Icon } from 'react-native-elements';
 import common_styles from '../common/styles/common_styles';
 import { DrawerActions } from 'react-navigation-drawer'
-import { CheckBox } from 'react-native-elements'
+import { CheckBox } from 'react-native-elements';
+
 class gpaCalculator extends React.Component {
   constructor(props) {
     super(props);
@@ -114,8 +115,8 @@ class gpaCalculator extends React.Component {
     if (fullGPA > 4) {
       alert('خطأ بإدخال علاماتك المعادة')
     } else {
-      alert(fullGPA)
-
+      // alert(fullGPA)
+      this.refs.progress.open();
     }
   }
 
@@ -394,9 +395,11 @@ class gpaCalculator extends React.Component {
         <View style={{ marginTop: 25 }}>
           <Button icon='calculator' label='إحسب' onPress={this.calculate} />
         </View>
-
-        
-      </View>
+        < Modal
+          style={styles.modalstyle}
+          ref='progress'
+        ></Modal>
+           </View>
     );
   }
 };
@@ -454,8 +457,10 @@ const styles = StyleSheet.create(
     CheckBoxTextStyle: {
       color: '#fff'
     },
-    wid: {
-      width: '20%'
+    modalstyle: {
+      width: '70%',
+      height: '40%',
+      opacity: 0.9
     }
   }
 )
