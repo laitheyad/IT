@@ -19,10 +19,10 @@ export default class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
+      name:'',
       level: '',
       major: '',
-      subjects: {},
+      subjects: {"null":1},
     }
     this.saveUserInfo = this.saveUserInfo.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
