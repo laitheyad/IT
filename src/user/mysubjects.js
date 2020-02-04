@@ -45,6 +45,9 @@ export default class MySubjectsModal extends React.Component {
                 coverScreen={true}
                 style={{ ...style_objects.main_container }}
             >
+                <View>
+                    <Text>جدول موادك الدراسية</Text>
+                </View>
                 <TouchableOpacity style={{ position: 'absolute', top: 20, right: 20, zIndex: 50 }} onPress={this.hide}>
                     <Icon name='close' containerStyle={{}} size={22} type='AntDesign' color={common_styles.colors.main_light_color} />
                 </TouchableOpacity>

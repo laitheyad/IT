@@ -4,33 +4,59 @@ import gpaCalculator from './screen/gpaCalculator';
 import SubjectNavigator from './src/subjects/main';
 import Profile from './src/user/profile';
 import CustomDrawer from './common/components/CustomDrawer';
+import { Icon } from 'react-native-elements';
+import React from 'react'
+import common_styles from './common/styles/common_styles';
 
 const MainNavigator = createDrawerNavigator({
+  Home:{
+    screen:SubjectNavigator,
+    navigationOptions: ({ navigation }) => ({
+      title: 'الصفحة الرئيسية',
+      drawerIcon: ({tintColor}) => (
+        <Icon size={18} color={tintColor} name='home' type='antdesign'/>
+      )
+    }),
+  },
   User:{
     screen:Profile,
     navigationOptions: ({ navigation }) => ({
       title: 'الصفحة الشخصية',
+      drawerIcon: ({tintColor}) => (
+        <Icon size={18} color={tintColor} name='user' type='antdesign'/>
+      )
     }),
   },
   subjectsList:{
     screen:SubjectNavigator,
     navigationOptions: ({ navigation }) => ({
-      title: 'المواد كافة',
+      title: 'المواد الدراسية',
+      drawerIcon: ({tintColor}) => (
+        <Icon size={18} color={tintColor} name='book' type='antdesign'/>
+      )
     }),
   },
   GPACalculator:{
     screen:gpaCalculator,
     navigationOptions: ({ navigation }) => ({
       title: 'حساب المعدل',
+      drawerIcon: ({tintColor}) => (
+        <Icon size={18} color={tintColor} name='calculator' type='antdesign'/>
+      )
       
     }),
   },
   
 },{
-  initialRouteName:'subjectsList',
+  initialRouteName:'Home',
   drawerPosition:'right',
+  activeTintColor:'red',
   contentComponent: CustomDrawer,
-  drawerType:'slide'
+  drawerType:'slide',
+  defaultNavigationOptions:{
+    drawerIcon:({tintColor})=><Icon color={tintColor} name='search' />,
+    
+  }
 })
 
 const App = createAppContainer(MainNavigator);

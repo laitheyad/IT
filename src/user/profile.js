@@ -6,7 +6,6 @@ import {
   TextInput,
   Picker,
   TouchableNativeFeedback,
-  FlatList,
   TouchableOpacity
 } from 'react-native';
 import common_styles, { style_objects } from '../../common/styles/common_styles';
@@ -14,7 +13,6 @@ import Button from '../../common/components/button';
 import AsyncStorage from '@react-native-community/async-storage';
 import { DrawerActions } from 'react-navigation-drawer'
 import { Icon } from 'react-native-elements';
-import SubjectItem from '../subjects/components/subject_component';
 import MySubjectsModal from './mysubjects';
 
 export default class Profile extends React.Component {
@@ -28,10 +26,12 @@ export default class Profile extends React.Component {
     }
     this.saveUserInfo = this.saveUserInfo.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
+    
   }
 
   componentDidMount() {
     this.getUserInfo();
+     
   }
 
   async saveUserInfo() {
@@ -69,6 +69,10 @@ export default class Profile extends React.Component {
     }
   }
 
+  componentWillUnmount(){
+    
+  }
+
   render() {
     return (
       <View style={styles.main_container}>
@@ -102,29 +106,20 @@ export default class Profile extends React.Component {
             </Picker>
             <Icon color={common_styles.colors.main_light_color} containerStyle={styles.field_icon_container} name='book' type='antdesign' />
           </View>
-          <TouchableOpacity disabled={Object.values(this.state.subjects).length>0?false:true} style={styles.subjects_header} onPress={()=>this.refs.mysubjects.show(this.state.subjects)}>
-            <View>
-              <View style={{position:'absolute',zIndex:2,top:-15,left:-15,padding:4,paddingHorizontal:6,borderRadius:20,backgroundColor:'#27ae60',justifyContent:'center',alignItems:'center'}}>
-                <Text style={{color:common_styles.colors.main_light_color,fontSize:11}}>{Object.keys(this.state.subjects).length}</Text>
+          <TouchableNativeFeedback disabled={Object.values(this.state.subjects).length > 0 ? false : true} onPress={() => this.refs.mysubjects.show(this.state.subjects)}>
+            <View style={styles.subjects_header}>
+              <View>
+                <View style={{ position: 'absolute', zIndex: 2, top: -10, left: -10, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 20, backgroundColor: '#27ae60', justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ color: common_styles.colors.main_light_color, fontSize: 11 }}>{Object.keys(this.state.subjects).length}</Text>
+                </View>
+                <Icon name='table' color={common_styles.colors.main_light_color} type='antdesign' containerStyle={{ padding: 10, marginBottom: 5, backgroundColor: common_styles.colors.main_back_color, borderRadius: 50 }} />
               </View>
               <Text style={{ color: common_styles.colors.main_light_color }}>جدولك الدراسي</Text>
             </View>
-          </TouchableOpacity>
-          
-          {/* <FlatList
-            style={{ marginBottom: 10 }}
-            data={Object.values(this.state.subjects)}
-            renderItem={({ item }) =>
-              <View style={{ marginBottom: 5 }}>
-                <SubjectItem {...this.props} pk={item.pk} name={item.name} major={item.major} level={item.level} />
-              </View>
-            }
-            // keyExtractor={(item) => item.pk.toString()}
-          // ListEmptyComponent={<No_result_found />}
-          /> */}
+          </TouchableNativeFeedback>
         </View>
         <Button label='حفظ' icon='save' onPress={this.saveUserInfo} />
-        <MySubjectsModal  ref='mysubjects' />
+        <MySubjectsModal ref='mysubjects' />
       </View>
     );
   }
@@ -139,7 +134,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 30,
     backgroundColor: common_styles.colors.main_back_color_light,
-    marginBottom: 10,
+    marginBottom: 15,
     paddingHorizontal: 13,
     direction: 'rtl',
   },
@@ -157,7 +152,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 30,
     backgroundColor: common_styles.colors.main_back_color_light,
-    marginBottom: 10,
+    marginBottom: 15,
     direction: 'rtl',
   },
   input: {
@@ -166,17 +161,15 @@ const styles = StyleSheet.create({
     color: common_styles.colors.main_light_color,
   },
   subjects_header: {
-    width: '100%',
+    width: '50%',
     backgroundColor: common_styles.colors.main_color,
-    paddingVertical: 10,
+    paddingVertical: 20,
     textAlign: 'center',
     color: common_styles.colors.main_light_color,
-    marginBottom: -1,
-    zIndex: 2,
-    borderTopStartRadius: 10,
-    borderTopEndRadius: 10,
+    borderRadius: 15,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    alignSelf: 'flex-end'
   },
   buttons: {
   },

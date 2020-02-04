@@ -5,6 +5,8 @@ const common_styles = {
         main_back_color_light:'#34495e',
         main_color:'#2980b9',
         main_light_color:'#ecf0f1',
+        fail_color:'#e74c3c',
+        pass_color:'#27ae60'
     }
 }
 

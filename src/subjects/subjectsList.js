@@ -5,15 +5,11 @@ import SubjectItem from './components/subject_component';
 import { Icon } from 'react-native-elements';
 import { DrawerActions } from 'react-navigation-drawer';
 import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
-import Swipeable from 'react-native-swipeable';
+import Swipeable from '../../common/components/swipable';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
-const rightContent =
-  <TouchableOpacity onPress={() => console.log('s')} style={{ alignItems: 'center', justifyContent: 'center', width: 75, height: '100%' }}>
-    <Icon name='plus' type='antdesign' size={18} color={common_styles.colors.main_light_color} />
-    <Text style={{ color: common_styles.colors.main_light_color }}>اضافة</Text>
-  </TouchableOpacity>
+
 
 class SubjectsList extends React.Component {
   constructor(props) {
@@ -23,7 +19,8 @@ class SubjectsList extends React.Component {
       searched_subjects: [],
       loading: false,
       search_string: '',
-      userInfo: null
+      userInfo: null,
+      addBG:common_styles.colors.fail_color
     };
     this._get_all_subjects = this._get_all_subjects.bind(this);
   }
@@ -65,22 +62,6 @@ class SubjectsList extends React.Component {
     this.setState({ loading: false });
   }
 
-  // async search(text) {
-  //   this.setState({ search_string: text, loading: true }, async () => {
-  //     try {
-  //       await fetch('http://laitheyad1.pythonanywhere.com/subjects/?search=' + text)
-  //         .then((response) => response.json())
-  //         .then((responseJson) => {
-  //           this.setState({ subjects: responseJson }, () => console.log('search_results', this.state.subjects))
-  //         });
-  //     }
-  //     catch (error) {
-  //       console.error(error);
-  //     }
-  //     this.setState({ loading: false })
-  //   })
-  // }
-
   local_search(text) {
     this.setState({ search_string: text });
     const subjects_list = this.state.subjects,
@@ -116,9 +97,6 @@ class SubjectsList extends React.Component {
     }
   }
 
-  // async remove_subject(subject) {
-  // }
-
   render() {
     const { loading, search_string } = this.state;
     const No_result_found = () => (
@@ -131,7 +109,13 @@ class SubjectsList extends React.Component {
           </View>
         }
       </View>
-    )
+    );
+    const rightContent = (
+      <TouchableOpacity onPress={() => console.log('s')} style={{ alignItems: 'center', justifyContent: 'center',backgroundColor:this.state.addBG, width: 75, height: '100%' }}>
+        <Icon name='plus' type='antdesign' size={18} color={common_styles.colors.main_light_color} />
+        <Text style={{ color: common_styles.colors.main_light_color }}>اضافة</Text>
+      </TouchableOpacity>
+    );
     return (
       <View style={styles.main_container}>
         <View style={styles.search_container}>
@@ -148,7 +132,7 @@ class SubjectsList extends React.Component {
         <FlatList
           data={this.state.searched_subjects}
           renderItem={({ item }) =>
-            <Swipeable style={{ flex: 1, height: '100%', marginTop: 7 }} rightContent={rightContent} onRightActionRelease={() => this.add_subject(item)} rightContentContainerStyle={{ flex: 1 }}>
+            <Swipeable style={{ flex: 1, height: '100%', marginTop: 7 }} rightContent={rightContent} onRightActionDeactivate={() => this.setState({addBG:common_styles.colors.fail_color})} onRightActionActivate={() => this.setState({addBG:common_styles.colors.pass_color})} onRightActionRelease={()=>this.add_subject(item)} rightContentContainerStyle={{ flex: 1 }}>
               <SubjectItem {...this.props} pk={item.pk} name={item.name} major={item.major} level={item.level} />
             </Swipeable>
           }
