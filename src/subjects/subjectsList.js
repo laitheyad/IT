@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList, ActivityIndicator, TextInput, } from 'react-native';
+import { StyleSheet, View, Text, FlatList, ActivityIndicator, TextInput, RefreshControl } from 'react-native';
 import common_styles, { style_objects } from '../../common/styles/common_styles';
 import SubjectItem from './components/subject_component';
 import { Icon } from 'react-native-elements';
@@ -7,9 +7,6 @@ import { DrawerActions } from 'react-navigation-drawer';
 import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import Swipeable from '../../common/components/swipable';
 import AsyncStorage from '@react-native-community/async-storage';
-
-
-
 
 class SubjectsList extends React.Component {
   constructor(props) {
@@ -20,7 +17,8 @@ class SubjectsList extends React.Component {
       loading: false,
       search_string: '',
       userInfo: null,
-      addBG:common_styles.colors.fail_color
+      addBG: common_styles.colors.fail_color,
+      refreshing: false
     };
     this._get_all_subjects = this._get_all_subjects.bind(this);
   }
@@ -28,6 +26,7 @@ class SubjectsList extends React.Component {
   async componentDidMount() {
     await this._get_all_subjects();
     await this.get_user_data();
+
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -48,7 +47,7 @@ class SubjectsList extends React.Component {
   }
 
   async _get_all_subjects() {
-    this.setState({ loading: true });
+    this.setState({ refreshing: true });
     try {
       await fetch('http://laitheyad1.pythonanywhere.com/subjects/')
         .then((response) => response.json())
@@ -59,7 +58,7 @@ class SubjectsList extends React.Component {
     catch (error) {
       console.log(error);
     }
-    this.setState({ loading: false });
+    this.setState({ refreshing: false });
   }
 
   local_search(text) {
@@ -97,13 +96,15 @@ class SubjectsList extends React.Component {
     }
   }
 
+
+
   render() {
     const { loading, search_string } = this.state;
     const No_result_found = () => (
       <View>
         {
           !this.state.loading &&
-          <View style={{ alignSelf: 'center', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
+          <View style={{ alignSelf: 'center', alignItems: 'center', justifyContent: 'center', marginTop: 20, }}>
             <Icon name='frowno' color={common_styles.colors.main_back_color_d1} size={45} type='antdesign' />
             <Text style={{ fontSize: 20, textAlign: 'center', color: common_styles.colors.main_back_color_d1, fontWeight: 'bold', marginTop: 4 }}>{'لا يوجد اي مواد\n مطابقة لذلك الأسم.'}</Text>
           </View>
@@ -111,7 +112,7 @@ class SubjectsList extends React.Component {
       </View>
     );
     const rightContent = (
-      <TouchableOpacity onPress={() => console.log('s')} style={{ alignItems: 'center', justifyContent: 'center',backgroundColor:this.state.addBG, width: 75, height: '100%' }}>
+      <TouchableOpacity onPress={() => console.log('s')} style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: this.state.addBG, width: 70, height: '100%', borderRadius: 5, marginLeft: 5, overflow: 'hidden' }}>
         <Icon name='plus' type='antdesign' size={18} color={common_styles.colors.main_light_color} />
         <Text style={{ color: common_styles.colors.main_light_color }}>اضافة</Text>
       </TouchableOpacity>
@@ -124,7 +125,6 @@ class SubjectsList extends React.Component {
               <Icon name='cancel' onPress={() => this.local_search('')} type='MaterialIcons' color={common_styles.colors.main_color} />
               :
               <Icon name='search' type='FontAwesome' color='rgba(0,0,0,0.15)' />
-
           }
           <TextInput placeholder='ابحث عن اسم المادة . .' style={{ padding: 0, flex: 1, textAlign: 'right' }} value={search_string} onChangeText={(text) => this.local_search(text)} />
         </View>
@@ -132,12 +132,22 @@ class SubjectsList extends React.Component {
         <FlatList
           data={this.state.searched_subjects}
           renderItem={({ item }) =>
-            <Swipeable style={{ flex: 1, height: '100%', marginTop: 7 }} rightContent={rightContent} onRightActionDeactivate={() => this.setState({addBG:common_styles.colors.fail_color})} onRightActionActivate={() => this.setState({addBG:common_styles.colors.pass_color})} onRightActionRelease={()=>this.add_subject(item)} rightContentContainerStyle={{ flex: 1 }}>
+            <Swipeable style={{ flex: 1, height: '100%', marginTop: 7 }} rightContent={rightContent} onRightActionDeactivate={() => this.setState({ addBG: common_styles.colors.fail_color })} onRightActionActivate={() => this.setState({ addBG: common_styles.colors.pass_color })} onRightActionRelease={() => this.add_subject(item)} rightContentContainerStyle={{ flex: 1 }}>
               <SubjectItem {...this.props} pk={item.pk} name={item.name} major={item.major} level={item.level} />
             </Swipeable>
           }
           keyExtractor={(item) => item.pk.toString()}
           ListEmptyComponent={<No_result_found />}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              style={{ elevation: 0 ,borderRadius:0}}
+
+              onRefresh={this._get_all_subjects.bind(this)}
+              progressBackgroundColor={common_styles.colors.main_back_color_d1}
+              colors={[common_styles.colors.main_color, common_styles.colors.pass_color,]}
+            />
+          }
         />
       </View>
     );

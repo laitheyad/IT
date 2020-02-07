@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableNativeFeedback, TouchableOpacity } fro
 import { Icon } from 'react-native-elements';
 import common_styles from '../../../common/styles/common_styles';
 
-export default class SubjectItem extends React.Component {
+export default class MySubjectItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,13 +13,15 @@ export default class SubjectItem extends React.Component {
   render() {
     const { pk, name, major, level } = this.props;
     return (
-      <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('subject_detail', {
+      <TouchableNativeFeedback onPress={() => {this.props.navigation.navigate('subject_detail', {
         subject_id: pk
-      })}>
+      });
+      this.props.hide();
+      }}>
         <View style={styles.item_container}>
           <View style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center',flex:1,justifyContent:'flex-end' }}>
-              <Text style={{ marginRight: 10, color: common_styles.colors.main_light_color,flex:1,textAlign:'right' }}>{name}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ marginRight: 10, color: common_styles.colors.main_light_color, }}>{name}</Text>
               <Icon color='#21303f' name='book' size={18} type='antdesign' />
             </View>
             <TouchableOpacity onPress={() => alert('hi')}>
@@ -44,7 +46,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: common_styles.colors.main_back_color_light,
     borderRadius: 6,
-    flex:1
   },
   subject_major: {
     color: '#fff',

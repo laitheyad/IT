@@ -19,19 +19,27 @@ export default class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name:'',
+      name: '',
       level: '',
       major: '',
-      subjects: {"null":1},
+      subjects: {},
     }
     this.saveUserInfo = this.saveUserInfo.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
+    this._forceUpdate = this._forceUpdate.bind(this);
     
   }
 
   componentDidMount() {
     this.getUserInfo();
-     
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this._forceUpdate();
+    });
+  }
+
+  async _forceUpdate(){
+    await this.getUserInfo();
+    this.setState({ count: 0 }); 
   }
 
   async saveUserInfo() {
@@ -69,8 +77,9 @@ export default class Profile extends React.Component {
     }
   }
 
-  componentWillUnmount(){
-    
+  componentWillUnmount() {
+    // Remove the event listener before removing the screen from the stack
+    this.focusListener.remove();
   }
 
   render() {
@@ -106,12 +115,12 @@ export default class Profile extends React.Component {
             </Picker>
             <Icon color={common_styles.colors.main_light_color} containerStyle={styles.field_icon_container} name='book' type='antdesign' />
           </View>
-          <TouchableNativeFeedback disabled={Object.values(this.state.subjects).length > 0 ? false : true} onPress={() => this.refs.mysubjects.show(this.state.subjects)}>
+          <TouchableNativeFeedback onPress={() => this.refs.mysubjects.show(this.state.subjects)}>
             <View style={styles.subjects_header}>
               <View>
-                <View style={{ position: 'absolute', zIndex: 2, top: -10, left: -10, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 20, backgroundColor: '#27ae60', justifyContent: 'center', alignItems: 'center' }}>
+                {/* <View style={{ position: 'absolute', zIndex: 2, top: -10, left: -10, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 20, backgroundColor: '#27ae60', justifyContent: 'center', alignItems: 'center' }}>
                   <Text style={{ color: common_styles.colors.main_light_color, fontSize: 11 }}>{Object.keys(this.state.subjects).length}</Text>
-                </View>
+                </View> */}
                 <Icon name='table' color={common_styles.colors.main_light_color} type='antdesign' containerStyle={{ padding: 10, marginBottom: 5, backgroundColor: common_styles.colors.main_back_color, borderRadius: 50 }} />
               </View>
               <Text style={{ color: common_styles.colors.main_light_color }}>جدولك الدراسي</Text>
@@ -119,7 +128,7 @@ export default class Profile extends React.Component {
           </TouchableNativeFeedback>
         </View>
         <Button label='حفظ' icon='save' onPress={this.saveUserInfo} />
-        <MySubjectsModal ref='mysubjects' />
+        <MySubjectsModal forceUpdate={this._forceUpdate} {...this.props} ref='mysubjects' />
       </View>
     );
   }
@@ -170,7 +179,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end'
-  },
-  buttons: {
   },
 })

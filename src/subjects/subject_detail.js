@@ -5,12 +5,15 @@ import {
   View,
   FlatList,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Icon } from 'react-native-elements';
 import NotebookFile, { TestbankFile } from './components/fileItem'
 import common_styles from '../../common/styles/common_styles';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 class SubjectDetailView extends React.Component {
   constructor(props) {
@@ -22,9 +25,62 @@ class SubjectDetailView extends React.Component {
         { key: 'notebooks', title: 'دوسيات' },
       ],
       subject_object: null,
-      subject_id: null
+      subject_id: null,
+      bookmarks: [],
+      bookmarked: false
     };
   }
+
+  // async toggleBookmark() {
+  //   console.log('in toggleBookmark')
+  //   this.setState({ bookmarked: !this.state.bookmarked }, async () => {
+  //     this.props.navigation.setParams({ bookmarked: this.state.bookmarked });
+  //     let bookmarks = this.state.bookmarks;
+  //     bookmarks[this.state.subject_id.toString()] = this.state.bookmarked;
+  //     try {
+  //       await AsyncStorage.setItem('bookmarks', JSON.stringify(bookmarks))
+  //       console.log('saved')
+  //     }
+  //     catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  //   );
+
+  //   // let bookmarks = [];
+  //   // if (this.state.bookmarks)
+
+  //   //   await AsyncStorage.setItem('bookmarks', JSON.stringify(userObject))
+  //   // this.props.navigation.navigate('subjectsList');
+  // };
+
+  // async getBookmark() {
+  //   console.log('in getBookmark')
+  //   try {
+  //     let bookmarks = await AsyncStorage.getItem('bookmarks');
+  //     if (bookmarks != null) {
+  //       let bookmarksObject = JSON.parse(bookmarks);
+  //       console.log('bookmarksObject:', bookmarksObject, this.state.subject_id);
+
+  //       this.setState({
+  //         bookmarks: bookmarksObject
+  //       });
+  //       console.log('subject id', this.state.subject_id.toString());
+  //       const state = bookmarks[this.state.subject_id.toString()];
+  //       if (state != undefined) {
+  //         console.log('in', state)
+  //         this.setState({ bookmarked: bookmarks[this.state.subject_id.toString()] == true ? true : false })
+  //       }
+  //     }
+  //     else {
+  //       console.log('not a single bookmark');
+  //       await AsyncStorage.setItem('bookmarks', JSON.stringify({}))
+  //     }
+  //   }
+  //   catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -33,13 +89,14 @@ class SubjectDetailView extends React.Component {
   };
 
   componentDidMount() {
+    // this.getBookmark();
     this.setState({ subject_id: this.props.navigation.getParam('subject_id', null) }, async () => {
       if (this.state.subject_id != null) {
         try {
           await fetch('http://laitheyad1.pythonanywhere.com/subjects/' + this.state.subject_id)
             .then((response) => response.json())
             .then((responseJson) => {
-              this.setState({ subject_object: responseJson }, () => console.log(this.state.subject_object))
+              this.setState({ subject_object: responseJson }) //  () => console.log(this.state.subject_object)
             });
         }
         catch (error) {
@@ -47,6 +104,7 @@ class SubjectDetailView extends React.Component {
         }
       }
       this.props.navigation.setParams({ title: this.state.subject_object.name });
+      this.props.navigation.setParams({ bookmarked: this.state.bookmarked });
     });
 
   }
@@ -54,6 +112,7 @@ class SubjectDetailView extends React.Component {
   render() {
     const { subject_object } = this.state;
     if (this.state.subject_object != null) {
+
       const testbanks = () => (
         <FlatList
           style={styles.testbanks_container}
@@ -79,6 +138,9 @@ class SubjectDetailView extends React.Component {
       return (
         <View style={styles.main_container}>
           <View style={styles.subject_number_container}>
+            {/* <TouchableOpacity containerStyle={{ zIndex: 2 }} onPress={() => this.toggleBookmark()}>
+              <Icon reverse name={this.state.bookmarked ? 'bookmark' : 'bookmark-border'} containerStyle={{}} size={22} type='MaterialIcons' color={common_styles.colors.main_color} />
+            </TouchableOpacity> */}
             <Text style={styles.subject_number}>{subject_object.subject_number}</Text>
           </View>
           <View style={[styles.content_container, { display: 'flex' }]}>
@@ -145,14 +207,14 @@ const styles = StyleSheet.create({
     padding: 15,
     flex: 1,
   },
-  subject_number_container:{
-    paddingVertical:4,
-    justifyContent:'center',
-    alignItems:'center',
-    backgroundColor:'rgba(0,0,0,0.2)'
+  subject_number_container: {
+    paddingVertical: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.2)'
   },
-  subject_number:{
-    color:common_styles.colors.main_light_color
+  subject_number: {
+    color: common_styles.colors.main_light_color
   },
   header_container: {
     flexDirection: 'row',
