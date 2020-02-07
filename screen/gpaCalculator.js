@@ -182,11 +182,11 @@ class gpaCalculator extends React.Component {
 
     return (
       <View style={style_objects.main_container}>
-
+        <TouchableOpacity style={{ position: 'absolute', top: 20, right: 20 }} onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
+          <Icon name='menu' containerStyle={{}} size={22} type='MaterialCommunityIcons' color={common_styles.colors.main_light_color} />
+        </TouchableOpacity>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{}}>
-          <TouchableOpacity style={{ position: 'absolute', top: 20, right: 20 }} onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
-            <Icon name='menu' containerStyle={{}} size={22} type='MaterialCommunityIcons' color={common_styles.colors.main_light_color} />
-          </TouchableOpacity>
+
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <View style={styles.container, { borderBottomWidth: 1 }}>
               <TextInput placeholderTextColor={common_styles.colors.main_light_color} placeholder="المعدل التراكمي" underlineColorAndroid='transparent' keyboardType={'numeric'}
