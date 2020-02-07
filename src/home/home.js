@@ -8,6 +8,7 @@ import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-
 import Swipeable from '../../common/components/swipable';
 import AsyncStorage from '@react-native-community/async-storage';
 import SectionButton from './components/sectionButton';
+import NotebookFile, { TestbankFile } from '../subjects/components/fileItem';
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -39,45 +40,11 @@ export default class Home extends React.Component {
         this.setState({ loading: true });
         let userInfo = await AsyncStorage.getItem('userInfo');
         userInfo = JSON.parse(userInfo);
-        this.setState({ userInfo: userInfo, loading: false })
-
+        this.setState({ userInfo: userInfo, loading: false, subjects: userInfo.subjects }, () => console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii', Object.values(this.state.subjects)));
+        console.log('home user', userInfo);
     }
 
     render() {
-        const sections = [
-            {
-                label: 'المواد الدراسية',
-                icon: 'book',
-            },
-            {
-                label: 'المواد الدراسية',
-                icon: 'book',
-            },
-            {
-                label: 'المواد الدراسية',
-                icon: 'book',
-            },
-            {
-                label: 'المواد الدراسية',
-                icon: 'book',
-            },
-            {
-                label: 'المواد الدراسية',
-                icon: 'book',
-            },
-            {
-                label: 'المواد الدراسية',
-                icon: 'book',
-            },
-            {
-                label: 'المواد الدراسية',
-                icon: 'book',
-            },
-            {
-                label: 'المواد الدراسية',
-                icon: 'book',
-            },
-        ]
         const { loading } = this.state;
         if (loading != true)
             return (
@@ -90,7 +57,7 @@ export default class Home extends React.Component {
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: common_styles.colors.main_back_color_d1 }}>
-                        <FlatList
+                        {/*<FlatList
                             horizontal
                             contentContainerStyle={{direction:'ltr'}}
                             data={sections}
@@ -98,13 +65,34 @@ export default class Home extends React.Component {
                             renderItem={({ item }) => (
                                 <SectionButton label={item.label} icon={item.icon} />
                             )}
-                        />
-                        <View style={{backgroundColor:common_styles.colors.main_back_color_d2}}>
+                            />*/}
+                        <View style={{ backgroundColor: common_styles.colors.main_back_color_d2 }}>
                             <SectionButton label='المواد الدراسية' icon='book' />
                         </View>
                     </View>
-                    <View style={styles.main_container}>
-
+                    <View style={[styles.main_container, { padding: 0 }]}>
+                        <FlatList
+                            contentContainerStyle={{ paddingVertical: 12, paddingHorizontal: 12 }}
+                            numColumns={2}
+                            data={Object.values(this.state.subjects)}
+                            renderItem={({ item, index }) => (
+                                <View style={{ flex: 1, marginRight: index % 2 == 0 && (index + 1) != Object.keys(this.state.subjects).length ? 12 : 0, marginBottom: 15 }}>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: common_styles.colors.main_back_color_d1, paddingHorizontal: 10, paddingVertical: 8, borderTopStartRadius: 7, borderTopEndRadius: 7, }}>
+                                        <Text style={{ color: common_styles.colors.main_light_color, textAlign: 'center', flex: 1,fontSize:12 }}>{item.name}</Text>
+                                    </View>
+                                    <View style={{padding:10, backgroundColor: common_styles.colors.main_back_color_light, borderBottomEndRadius: 5, borderBottomStartRadius: 5, minHeight: 20,justifyContent:'center',alignItems:'center',flex:1 }}>
+                                        <Icon
+                                        containerStyle={{borderRadius:50,padding:0,backgroundColor:'rgba(0,0,0,0.1)'}}
+                                            reverse
+                                            name='book'
+                                            type='antdesign'
+                                            color={common_styles.colors.main_color}
+                                            reverseColor={common_styles.colors.main_light_color}
+                                        />
+                                    </View>
+                                </View>
+                            )}
+                        />
                     </View>
                 </View>
             );
