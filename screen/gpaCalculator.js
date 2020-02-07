@@ -9,6 +9,7 @@ import {
   TextInput,
   Picker,
   FlatList,
+  ScrollView
 
 } from 'react-native';
 import Modal from 'react-native-modalbox'
@@ -90,7 +91,7 @@ class gpaCalculator extends React.Component {
     }
 
     if (this.state.c4 == true) {
-      oldGPA -= (this.state.rm4 * this.state.h4);
+      oldGPA -= (this.state.rm4 * this.state.h104);
       Allhours -= this.state.h4
     }
 
@@ -180,6 +181,7 @@ class gpaCalculator extends React.Component {
     const hoursOptions = [3, 2, 1]
 
     return (
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flex:1}}>
       <View style={style_objects.main_container}>
         <TouchableOpacity style={{ position: 'absolute', top: 20, right: 20 }} onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
           <Icon name='menu' containerStyle={{}} size={22} type='MaterialCommunityIcons' color={common_styles.colors.main_light_color} />
@@ -205,7 +207,8 @@ class gpaCalculator extends React.Component {
               checkedColor='#fff'
               checkedTitle='.'
               containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, width: this.state.c1 ? '8%' : '38%' }]}
-              textStyle={{ color: '#fff' }}
+              textStyle={{ color: '#fff' ,fontSize:10}}
+             
             />
             <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c1 ? 'flex' : 'none' }]} selectedValue={this.state.rm1} onValueChange={(text) => this.setState({ rm1: text })} >
               {markOptions.map((item, index) => {
@@ -234,7 +237,7 @@ class gpaCalculator extends React.Component {
               title='هل المادة معادة ؟'
               checkedColor='#fff'
               containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c2 ? '8%' : '38%' }]}
-              textStyle={{ color: '#fff' }}
+              textStyle={{ color: '#fff',fontSize:10 }}
             />
             <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c2 ? 'flex' : 'none' }]} selectedValue={this.state.rm2} onValueChange={(text) => this.setState({ rm2: text })} >
               {markOptions.map((item, index) => {
@@ -262,7 +265,7 @@ class gpaCalculator extends React.Component {
               title='هل المادة معادة ؟'
               checkedColor='#fff'
               containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c3 ? '8%' : '38%' }]}
-              textStyle={{ color: '#fff' }}
+              textStyle={{ color: '#fff',fontSize:10 }}
             />
             <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c3 ? 'flex' : 'none' }]} selectedValue={this.state.rm3} onValueChange={(text) => this.setState({ rm3: text })} >
               {markOptions.map((item, index) => {
@@ -290,7 +293,7 @@ class gpaCalculator extends React.Component {
               title='هل المادة معادة ؟'
               checkedColor='#fff'
               containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c4 ? '8%' : '38%' }]}
-              textStyle={{ color: '#fff' }}
+              textStyle={{ color: '#fff',fontSize:10 }}
             />
             <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c4 ? 'flex' : 'none' }]} selectedValue={this.state.rm4} onValueChange={(text) => this.setState({ rm4: text })} >
               {markOptions.map((item, index) => {
@@ -317,7 +320,7 @@ class gpaCalculator extends React.Component {
             title='هل المادة معادة ؟'
             checkedColor='#fff'
             containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c5 ? '8%' : '38%' }]}
-            textStyle={{ color: '#fff' }}
+            textStyle={{ color: '#fff',fontSize:10 }}
           />
           <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c5 ? 'flex' : 'none' }]} selectedValue={this.state.rm5} onValueChange={(text) => this.setState({ rm5: text })} >
             {markOptions.map((item, index) => {
@@ -345,7 +348,7 @@ class gpaCalculator extends React.Component {
             title='هل المادة معادة ؟'
             checkedColor='#fff'
             containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c6 ? '8%' : '38%' }]}
-            textStyle={{ color: '#fff' }}
+            textStyle={{ color: '#fff' ,fontSize:10}}
           />
           <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c6 ? 'flex' : 'none' }]} selectedValue={this.state.rm6} onValueChange={(text) => this.setState({ rm6: text })} >
             {markOptions.map((item, index) => {
@@ -374,7 +377,7 @@ class gpaCalculator extends React.Component {
             title='هل المادة معادة ؟'
             checkedColor='#fff'
             containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c7 ? '8%' : '38%' }]}
-            textStyle={{ color: '#fff' }}
+            textStyle={{ color: '#fff',fontSize:10 }}
           />
           <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c7 ? 'flex' : 'none' }]} selectedValue={this.state.rm7} onValueChange={(text) => this.setState({ rm7: text })} >
             {markOptions.map((item, index) => {
@@ -400,6 +403,7 @@ class gpaCalculator extends React.Component {
           ref='progress'
         ></Modal>
            </View>
+           </ScrollView>
     );
   }
 };
@@ -414,7 +418,8 @@ const styles = StyleSheet.create(
       justifyContent: 'space-between',
       alignItems: 'center',
       borderWidth: 1,
-      borderColor: 'rgba(0,0,0,0.1)'
+      borderColor: 'rgba(0,0,0,0.1)',
+      fontSize:5
     },
     Image: {
       marginTop: '10%',
@@ -445,10 +450,11 @@ const styles = StyleSheet.create(
       fontSize: 20
     },
     markPicker: {
-      width: '38%'
+      marginLeft:-20,
+      width: '41%'
     },
     hoursPicker: {
-      width: '21%',
+      width: '23%',
     },
     CheckBoxStyle: {
       width: '40%',
