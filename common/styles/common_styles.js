@@ -1,3 +1,4 @@
+import {StyleSheet} from 'react-native'
 const common_styles = {
     colors:{
         main_back_color:'#2c3e50',
@@ -10,13 +11,22 @@ const common_styles = {
     }
 }
 
-const style_objects = {
+const style_objects = StyleSheet.create({
     main_container:{
         flex:1,
-        padding:20,
+        padding:15,
         backgroundColor:common_styles.colors.main_back_color
+    },
+    headerBar:{
+        width:'100%',
+        height:50,
+        backgroundColor:common_styles.colors.main_color,
+        alignItems:'center',
+        flexDirection:'row',
+        justifyContent:'flex-end',
+        paddingHorizontal:20
     }
-}
+})
 
 export default common_styles;
 export {style_objects};

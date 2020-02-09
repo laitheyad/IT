@@ -7,10 +7,11 @@ import CustomDrawer from './common/components/CustomDrawer';
 import { Icon } from 'react-native-elements';
 import React from 'react'
 import common_styles from './common/styles/common_styles';
+import Home from './src/home/home'
 
 const MainNavigator = createDrawerNavigator({
   Home:{
-    screen:SubjectNavigator,
+    screen:Home,
     navigationOptions: ({ navigation }) => ({
       title: 'الصفحة الرئيسية',
       drawerIcon: ({tintColor}) => (

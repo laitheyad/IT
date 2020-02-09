@@ -27,7 +27,6 @@ export default class Profile extends React.Component {
     this.saveUserInfo = this.saveUserInfo.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
     this._forceUpdate = this._forceUpdate.bind(this);
-    
   }
 
   componentDidMount() {

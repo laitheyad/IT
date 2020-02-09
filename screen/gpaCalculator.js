@@ -19,7 +19,7 @@ import { Icon } from 'react-native-elements';
 import common_styles from '../common/styles/common_styles';
 import { DrawerActions } from 'react-navigation-drawer'
 import { CheckBox } from 'react-native-elements';
-
+import ProgressCircle from 'react-native-progress-circle';
 class gpaCalculator extends React.Component {
   constructor(props) {
     super(props);
@@ -32,6 +32,7 @@ class gpaCalculator extends React.Component {
       h1: 3, h2: 3, h3: 3, h4: 3, h5: 3, h6: 3, h7: 3,
       c1: false, c2: false, c3: false, c4: false, c5: false, c6: false, c7: false,
       rm1: null, rm2: null, rm3: null, rm4: null, rm5: null, rm6: null, rm7: null,
+      totalHours: 0,
     }
     this.calculate = this.calculate.bind(this);
   }
@@ -113,10 +114,13 @@ class gpaCalculator extends React.Component {
 
     let semGPA = newGPA / counter;
     let fullGPA = (oldGPA + newGPA) / (counter + Allhours);
+     this.state.totalHours=(counter + Allhours)
     if (fullGPA > 4) {
       alert('خطأ بإدخال علاماتك المعادة')
     } else {
+     
       // alert(fullGPA)
+   
       this.refs.progress.open();
     }
   }
@@ -185,157 +189,72 @@ class gpaCalculator extends React.Component {
         <TouchableOpacity style={{ position: 'absolute', top: 20, right: 20, zIndex: 2 }} onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
           <Icon name='menu' containerStyle={{}} size={22} type='MaterialCommunityIcons' color={common_styles.colors.main_light_color} />
         </TouchableOpacity>
-        <View >
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{}}>
 
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{}}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <View style={styles.container, { borderBottomWidth: 1 }}>
+              <TextInput placeholderTextColor={common_styles.colors.main_light_color} placeholder="المعدل التراكمي" underlineColorAndroid='transparent' keyboardType={'numeric'}
+                value={this.state.fullGPA} style={{ width: 300, textAlign: 'center', color: common_styles.colors.main_light_color }} onChangeText={(text) => this.setState({ fullGPA: parseFloat(text) })} />
+            </View>
+            <View style={styles.container, { borderBottomWidth: 1 }}>
+              <TextInput placeholderTextColor={common_styles.colors.main_light_color} placeholder="الساعات المقطوعه" underlineColorAndroid='transparent' keyboardType={'numeric'}
+                value={this.state.Allhours} style={{ width: 300, textAlign: 'center' }} onChangeText={(text) => this.setState({ Allhours: parseInt(text, 10) })} />
+            </View>
 
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <View style={styles.container, { borderBottomWidth: 1 }}>
-                <TextInput placeholderTextColor={common_styles.colors.main_light_color} placeholder="المعدل التراكمي" underlineColorAndroid='transparent' keyboardType={'numeric'}
-                  value={this.state.fullGPA} style={{ width: 300, textAlign: 'center', color: common_styles.colors.main_light_color }} onChangeText={(text) => this.setState({ fullGPA: parseFloat(text) })} />
-              </View>
-              <View style={styles.container, { borderBottomWidth: 1 }}>
-                <TextInput placeholderTextColor={common_styles.colors.main_light_color} placeholder="الساعات المقطوعه" underlineColorAndroid='transparent' keyboardType={'numeric'}
-                  value={this.state.Allhours} style={{ width: 300, textAlign: 'center' }} onChangeText={(text) => this.setState({ Allhours: parseInt(text, 10) })} />
-              </View>
 
+          </View>
+          <View style={{ marginTop: 20, }}>
+            <View style={styles.picker_container}>
+              <CheckBox
+                checked={this.state.c1}
+                onPress={() => { this.state.c1 ? this.setState({ c1: false }) : this.setState({ c1: true }) }}
+                title='هل المادة معادة ؟'
+                checkedColor='#fff'
+                checkedTitle='.'
+                containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, width: this.state.c1 ? '8%' : '38%' }]}
+                textStyle={{ color: '#fff', fontSize: 10 }}
+
+              />
+              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c1 ? 'flex' : 'none' }]} selectedValue={this.state.rm1} onValueChange={(text) => this.setState({ rm1: text })} >
+                {markOptions.map((item, index) => {
+                  return (<Picker.Item label={item.label} value={item.value} key={index} />)
+                })}
+              </Picker>
+              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m1} onValueChange={(text) => this.setState({ m1: text })} >
+                {markOptions.map((item, index) => {
+                  return (<Picker.Item label={item.label} value={item.value} key={index} />)
+                })}
+              </Picker>
+              <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h1} onValueChange={(text) => this.setState({ h1: text })}>
+                {hoursOptions.map((item, index) => {
+                  return (<Picker.Item style={{ textAlign: 'right' }} label={item.toString()} value={item} key={index} />)
+                })}
+              </Picker>
 
             </View>
-            <View style={{ marginTop: 20, }}>
-              <View style={styles.picker_container}>
-                <CheckBox
-                  checked={this.state.c1}
-                  onPress={() => { this.state.c1 ? this.setState({ c1: false }) : this.setState({ c1: true }) }}
-                  title='هل المادة معادة ؟'
-                  checkedColor='#fff'
-                  checkedTitle='.'
-                  containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, width: this.state.c1 ? '8%' : '38%' }]}
-                  textStyle={{ color: '#fff', fontSize: 10 }}
 
-                />
-                <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c1 ? 'flex' : 'none' }]} selectedValue={this.state.rm1} onValueChange={(text) => this.setState({ rm1: text })} >
-                  {markOptions.map((item, index) => {
-                    return (<Picker.Item label={item.label} value={item.value} key={index} />)
-                  })}
-                </Picker>
-                <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m1} onValueChange={(text) => this.setState({ m1: text })} >
-                  {markOptions.map((item, index) => {
-                    return (<Picker.Item label={item.label} value={item.value} key={index} />)
-                  })}
-                </Picker>
-                <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h1} onValueChange={(text) => this.setState({ h1: text })}>
-                  {hoursOptions.map((item, index) => {
-                    return (<Picker.Item style={{ textAlign: 'right' }} label={item.toString()} value={item} key={index} />)
-                  })}
-                </Picker>
-
-              </View>
-
-              <View style={styles.picker_container}>
-                <CheckBox
-                  checkedTitle='.'
-
-                  checked={this.state.c2}
-                  onPress={() => { this.state.c2 ? this.setState({ c2: false }) : this.setState({ c2: true }) }}
-                  title='هل المادة معادة ؟'
-                  checkedColor='#fff'
-                  containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c2 ? '8%' : '38%' }]}
-                  textStyle={{ color: '#fff', fontSize: 10 }}
-                />
-                <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c2 ? 'flex' : 'none' }]} selectedValue={this.state.rm2} onValueChange={(text) => this.setState({ rm2: text })} >
-                  {markOptions.map((item, index) => {
-                    return (<Picker.Item label={item.label} value={item.value} key={index} />)
-                  })}
-                </Picker>
-                <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m2} onValueChange={(text) => this.setState({ m2: text })} >
-                  {markOptions.map((item, index) => {
-                    return (<Picker.Item label={item.label} value={item.value} key={index} />)
-                  })}
-                </Picker>
-                <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h2} onValueChange={(text) => this.setState({ h2: text })}>
-                  {hoursOptions.map((item, index) => {
-                    return (<Picker.Item label={item.toString()} value={item} key={index} />)
-                  })}
-                </Picker>
-              </View>
-
-              <View style={styles.picker_container}>
-                <CheckBox
-                  checkedTitle='.'
-
-                  checked={this.state.c3}
-                  onPress={() => { this.state.c3 ? this.setState({ c3: false }) : this.setState({ c3: true }) }}
-                  title='هل المادة معادة ؟'
-                  checkedColor='#fff'
-                  containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c3 ? '8%' : '38%' }]}
-                  textStyle={{ color: '#fff', fontSize: 10 }}
-                />
-                <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c3 ? 'flex' : 'none' }]} selectedValue={this.state.rm3} onValueChange={(text) => this.setState({ rm3: text })} >
-                  {markOptions.map((item, index) => {
-                    return (<Picker.Item label={item.label} value={item.value} key={index} />)
-                  })}
-                </Picker>
-                <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m3} onValueChange={(text) => this.setState({ m3: text })} >
-                  {markOptions.map((item, index) => {
-                    return (<Picker.Item label={item.label} value={item.value} key={index} />)
-                  })}
-                </Picker>
-                <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h3} onValueChange={(text) => this.setState({ h3: text })}>
-                  {hoursOptions.map((item, index) => {
-                    return (<Picker.Item label={item.toString()} value={item} key={index} />)
-                  })}
-                </Picker>
-              </View>
-
-              <View style={styles.picker_container}>
-                <CheckBox
-                  checkedTitle='.'
-
-                  checked={this.state.c4}
-                  onPress={() => { this.state.c4 ? this.setState({ c4: false }) : this.setState({ c4: true }) }}
-                  title='هل المادة معادة ؟'
-                  checkedColor='#fff'
-                  containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c4 ? '8%' : '38%' }]}
-                  textStyle={{ color: '#fff', fontSize: 10 }}
-                />
-                <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c4 ? 'flex' : 'none' }]} selectedValue={this.state.rm4} onValueChange={(text) => this.setState({ rm4: text })} >
-                  {markOptions.map((item, index) => {
-                    return (<Picker.Item label={item.label} value={item.value} key={index} />)
-                  })}
-                </Picker>
-                <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m4} onValueChange={(text) => this.setState({ m4: text })} >
-                  {markOptions.map((item, index) => {
-                    return (<Picker.Item label={item.label} value={item.value} key={index} />)
-                  })}
-                </Picker>
-                <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h4} onValueChange={(text) => this.setState({ h4: text })}>
-                  {hoursOptions.map((item, index) => {
-                    return (<Picker.Item label={item.toString()} value={item} key={index} />)
-                  })}
-                </Picker>
-              </View>
-            </View>
             <View style={styles.picker_container}>
               <CheckBox
                 checkedTitle='.'
-                checked={this.state.c5}
-                onPress={() => { this.state.c5 ? this.setState({ c5: false }) : this.setState({ c5: true }) }}
+
+                checked={this.state.c2}
+                onPress={() => { this.state.c2 ? this.setState({ c2: false }) : this.setState({ c2: true }) }}
                 title='هل المادة معادة ؟'
                 checkedColor='#fff'
-                containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c5 ? '8%' : '38%' }]}
+                containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c2 ? '8%' : '38%' }]}
                 textStyle={{ color: '#fff', fontSize: 10 }}
               />
-              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c5 ? 'flex' : 'none' }]} selectedValue={this.state.rm5} onValueChange={(text) => this.setState({ rm5: text })} >
+              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c2 ? 'flex' : 'none' }]} selectedValue={this.state.rm2} onValueChange={(text) => this.setState({ rm2: text })} >
                 {markOptions.map((item, index) => {
                   return (<Picker.Item label={item.label} value={item.value} key={index} />)
                 })}
               </Picker>
-              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m5} onValueChange={(text) => this.setState({ m5: text })} >
+              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m2} onValueChange={(text) => this.setState({ m2: text })} >
                 {markOptions.map((item, index) => {
                   return (<Picker.Item label={item.label} value={item.value} key={index} />)
                 })}
               </Picker>
-              <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h5} onValueChange={(text) => this.setState({ h5: text })}>
+              <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h2} onValueChange={(text) => this.setState({ h2: text })}>
                 {hoursOptions.map((item, index) => {
                   return (<Picker.Item label={item.toString()} value={item} key={index} />)
                 })}
@@ -346,68 +265,163 @@ class gpaCalculator extends React.Component {
               <CheckBox
                 checkedTitle='.'
 
-                checked={this.state.c6}
-                onPress={() => { this.state.c6 ? this.setState({ c6: false }) : this.setState({ c6: true }) }}
+                checked={this.state.c3}
+                onPress={() => { this.state.c3 ? this.setState({ c3: false }) : this.setState({ c3: true }) }}
                 title='هل المادة معادة ؟'
                 checkedColor='#fff'
-                containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c6 ? '8%' : '38%' }]}
+                containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c3 ? '8%' : '38%' }]}
                 textStyle={{ color: '#fff', fontSize: 10 }}
               />
-              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c6 ? 'flex' : 'none' }]} selectedValue={this.state.rm6} onValueChange={(text) => this.setState({ rm6: text })} >
+              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c3 ? 'flex' : 'none' }]} selectedValue={this.state.rm3} onValueChange={(text) => this.setState({ rm3: text })} >
                 {markOptions.map((item, index) => {
                   return (<Picker.Item label={item.label} value={item.value} key={index} />)
                 })}
               </Picker>
-              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m6} onValueChange={(text) => this.setState({ m6: text })} >
+              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m3} onValueChange={(text) => this.setState({ m3: text })} >
                 {markOptions.map((item, index) => {
                   return (<Picker.Item label={item.label} value={item.value} key={index} />)
                 })}
               </Picker>
-              <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h6} onValueChange={(text) => this.setState({ h6: text })}>
+              <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h3} onValueChange={(text) => this.setState({ h3: text })}>
                 {hoursOptions.map((item, index) => {
                   return (<Picker.Item label={item.toString()} value={item} key={index} />)
                 })}
               </Picker>
             </View>
-
 
             <View style={styles.picker_container}>
               <CheckBox
                 checkedTitle='.'
 
-                checked={this.state.c7}
-                onPress={() => { this.state.c7 ? this.setState({ c7: false }) : this.setState({ c7: true }) }}
+                checked={this.state.c4}
+                onPress={() => { this.state.c4 ? this.setState({ c4: false }) : this.setState({ c4: true }) }}
                 title='هل المادة معادة ؟'
                 checkedColor='#fff'
-                containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c7 ? '8%' : '38%' }]}
+                containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c4 ? '8%' : '38%' }]}
                 textStyle={{ color: '#fff', fontSize: 10 }}
               />
-              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c7 ? 'flex' : 'none' }]} selectedValue={this.state.rm7} onValueChange={(text) => this.setState({ rm7: text })} >
+              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c4 ? 'flex' : 'none' }]} selectedValue={this.state.rm4} onValueChange={(text) => this.setState({ rm4: text })} >
                 {markOptions.map((item, index) => {
                   return (<Picker.Item label={item.label} value={item.value} key={index} />)
                 })}
               </Picker>
-              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m7} onValueChange={(text) => this.setState({ m7: text })} >
+              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m4} onValueChange={(text) => this.setState({ m4: text })} >
                 {markOptions.map((item, index) => {
                   return (<Picker.Item label={item.label} value={item.value} key={index} />)
                 })}
               </Picker>
-              <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h7} onValueChange={(text) => this.setState({ h7: text })}>
+              <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h4} onValueChange={(text) => this.setState({ h4: text })}>
                 {hoursOptions.map((item, index) => {
                   return (<Picker.Item label={item.toString()} value={item} key={index} />)
                 })}
               </Picker>
-            </View  >
-            <View style={{ marginTop: 25 }}>
-              <Button icon='calculator' label='إحسب' onPress={this.calculate} />
-
             </View>
-            < Modal
-              style={styles.modalstyle}
-              ref='progress'
-            ></Modal>
-          </ScrollView>
-        </View>
+          </View>
+          <View style={styles.picker_container}>
+            <CheckBox
+              checkedTitle='.'
+              checked={this.state.c5}
+              onPress={() => { this.state.c5 ? this.setState({ c5: false }) : this.setState({ c5: true }) }}
+              title='هل المادة معادة ؟'
+              checkedColor='#fff'
+              containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c5 ? '8%' : '38%' }]}
+              textStyle={{ color: '#fff', fontSize: 10 }}
+            />
+            <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c5 ? 'flex' : 'none' }]} selectedValue={this.state.rm5} onValueChange={(text) => this.setState({ rm5: text })} >
+              {markOptions.map((item, index) => {
+                return (<Picker.Item label={item.label} value={item.value} key={index} />)
+              })}
+            </Picker>
+            <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m5} onValueChange={(text) => this.setState({ m5: text })} >
+              {markOptions.map((item, index) => {
+                return (<Picker.Item label={item.label} value={item.value} key={index} />)
+              })}
+            </Picker>
+            <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h5} onValueChange={(text) => this.setState({ h5: text })}>
+              {hoursOptions.map((item, index) => {
+                return (<Picker.Item label={item.toString()} value={item} key={index} />)
+              })}
+            </Picker>
+          </View>
+
+          <View style={styles.picker_container}>
+            <CheckBox
+              checkedTitle='.'
+
+              checked={this.state.c6}
+              onPress={() => { this.state.c6 ? this.setState({ c6: false }) : this.setState({ c6: true }) }}
+              title='هل المادة معادة ؟'
+              checkedColor='#fff'
+              containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c6 ? '8%' : '38%' }]}
+              textStyle={{ color: '#fff', fontSize: 10 }}
+            />
+            <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c6 ? 'flex' : 'none' }]} selectedValue={this.state.rm6} onValueChange={(text) => this.setState({ rm6: text })} >
+              {markOptions.map((item, index) => {
+                return (<Picker.Item label={item.label} value={item.value} key={index} />)
+              })}
+            </Picker>
+            <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m6} onValueChange={(text) => this.setState({ m6: text })} >
+              {markOptions.map((item, index) => {
+                return (<Picker.Item label={item.label} value={item.value} key={index} />)
+              })}
+            </Picker>
+            <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h6} onValueChange={(text) => this.setState({ h6: text })}>
+              {hoursOptions.map((item, index) => {
+                return (<Picker.Item label={item.toString()} value={item} key={index} />)
+              })}
+            </Picker>
+          </View>
+
+
+          <View style={styles.picker_container}>
+            <CheckBox
+              checkedTitle='.'
+
+              checked={this.state.c7}
+              onPress={() => { this.state.c7 ? this.setState({ c7: false }) : this.setState({ c7: true }) }}
+              title='هل المادة معادة ؟'
+              checkedColor='#fff'
+              containerStyle={[styles.CheckBoxStyle, { backgroundColor: '#2c3e50', borderWidth: 0, borderWidth: 0, width: this.state.c7 ? '8%' : '38%' }]}
+              textStyle={{ color: '#fff', fontSize: 10 }}
+            />
+            <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c7 ? 'flex' : 'none' }]} selectedValue={this.state.rm7} onValueChange={(text) => this.setState({ rm7: text })} >
+              {markOptions.map((item, index) => {
+                return (<Picker.Item label={item.label} value={item.value} key={index} />)
+              })}
+            </Picker>
+            <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.m7} onValueChange={(text) => this.setState({ m7: text })} >
+              {markOptions.map((item, index) => {
+                return (<Picker.Item label={item.label} value={item.value} key={index} />)
+              })}
+            </Picker>
+            <Picker style={[styles.hoursPicker, { color: common_styles.colors.main_light_color }]} selectedValue={this.state.h7} onValueChange={(text) => this.setState({ h7: text })}>
+              {hoursOptions.map((item, index) => {
+                return (<Picker.Item label={item.toString()} value={item} key={index} />)
+              })}
+            </Picker>
+          </View  >
+          <View style={{ marginTop: 25 }}>
+            <Button icon='calculator' label='إحسب' onPress={this.calculate} />
+
+          </View>
+          < Modal
+            style={styles.modalstyle}
+            ref='progress'
+          >
+            <ProgressCircle
+              percent={this.state.totalHours}
+              radius={50}
+              borderWidth={8}
+              color="#3399FF"
+              shadowColor="#999"
+              bgColor="#fff"
+            >
+              <Text style={{ fontSize: 18 }}>{this.state.totalHours}</Text>
+            </ProgressCircle>
+
+
+          </Modal>
+        </ScrollView>
       </View>
     );
   }
