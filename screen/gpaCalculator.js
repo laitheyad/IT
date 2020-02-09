@@ -143,7 +143,7 @@ class gpaCalculator extends React.Component {
     const markOptions =
       [
         {
-          label: 'اختر العلامه',
+          label: 'العلامه',
           value: null
         },
         {
@@ -229,7 +229,7 @@ class gpaCalculator extends React.Component {
                 textStyle={{ color: '#fff', fontSize: 10 }}
 
               />
-              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color, display: this.state.c1 ? 'flex' : 'none' }]} selectedValue={this.state.rm1} onValueChange={(text) => this.setState({ rm1: text })} >
+              <Picker style={[styles.markPicker, { color: common_styles.colors.main_light_color,fontSize:5, display: this.state.c1 ? 'flex' : 'none' }]} selectedValue={this.state.rm1} onValueChange={(text) => this.setState({ rm1: text })} >
                 {markOptions.map((item, index) => {
                   return (<Picker.Item label={item.label} value={item.value} key={index} />)
                 })}
@@ -496,8 +496,8 @@ const styles = StyleSheet.create(
       fontSize: 20
     },
     markPicker: {
-      marginLeft: -20,
-      width: '41%'
+     
+      width: '29%'
     },
     hoursPicker: {
       width: '23%',
