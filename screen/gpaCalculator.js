@@ -12,7 +12,7 @@ import {
   ScrollView
 
 } from 'react-native';
-import Modal from 'react-native-modalbox'
+import Modal from 'react-native-modal'
 import common_style, { style_objects } from '../common/styles/common_styles'
 import Button from '../common/components/button'
 import { Icon } from 'react-native-elements';
@@ -24,15 +24,17 @@ class gpaCalculator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      Allhours: '',
-      fullGPA: '',
-      semesterHours: '',
+      Allhours: 0,
+      fullGPA: 0.0,
+      semGPA: 0.0,
+      semesterHours: 0,
       modalVisible: true,
       m1: null, m2: null, m3: null, m4: null, m5: null, m6: null, m7: null,
       h1: 3, h2: 3, h3: 3, h4: 3, h5: 3, h6: 3, h7: 3,
       c1: false, c2: false, c3: false, c4: false, c5: false, c6: false, c7: false,
       rm1: null, rm2: null, rm3: null, rm4: null, rm5: null, rm6: null, rm7: null,
       totalHours: 0,
+      avg: '',
     }
     this.calculate = this.calculate.bind(this);
   }
@@ -112,16 +114,28 @@ class gpaCalculator extends React.Component {
     }
 
 
-    let semGPA = newGPA / counter;
-    let fullGPA = (oldGPA + newGPA) / (counter + Allhours);
-     this.state.totalHours=(counter + Allhours)
-    if (fullGPA > 4) {
+    let sGPA = newGPA / counter;
+    let GPA = (oldGPA + newGPA) / (counter + Allhours);
+    this.state.totalHours = (counter + Allhours)
+    if (GPA > 4) {
       alert('خطأ بإدخال علاماتك المعادة')
     } else {
-     
-      // alert(fullGPA)
-   
-      this.refs.progress.open();
+      this.setState({ fullGPA: GPA })
+      this.setState({ semGPA: sGPA })
+      this.setState({ semesterHours: counter })
+
+      if (GPA >= 3.65)
+        this.setState({ avg: 'إمتياز' })
+
+      else if (GPA < 3.65 && GPA >= 3)
+        this.setState({ avg: 'جيد جدا' })
+
+      else if (GPA < 3 && GPA >= 2.5)
+        this.setState({ avg: 'جيد' })
+
+      else if (GPA <2.5)
+        this.setState({ avg: 'مقبول' })
+
     }
   }
 
@@ -198,7 +212,7 @@ class gpaCalculator extends React.Component {
             </View>
             <View style={styles.container, { borderBottomWidth: 1 }}>
               <TextInput placeholderTextColor={common_styles.colors.main_light_color} placeholder="الساعات المقطوعه" underlineColorAndroid='transparent' keyboardType={'numeric'}
-                value={this.state.Allhours} style={{ width: 300, textAlign: 'center' }} onChangeText={(text) => this.setState({ Allhours: parseInt(text, 10) })} />
+                value={this.state.Allhours} style={{ width: 300, textAlign: 'center', color: common_styles.colors.main_light_color }} onChangeText={(text) => this.setState({ Allhours: parseInt(text, 10) })} />
             </View>
 
 
@@ -401,25 +415,38 @@ class gpaCalculator extends React.Component {
             </Picker>
           </View  >
           <View style={{ marginTop: 25 }}>
-            <Button icon='calculator' label='إحسب' onPress={this.calculate} />
+            <Button icon='calculator' label='إحسب' onPress={() => { this.calculate(); this.setState({ v: true }) }} />
 
           </View>
           < Modal
-            style={styles.modalstyle}
-            ref='progress'
+            isVisible={this.state.v}
           >
-            <ProgressCircle
-              percent={this.state.totalHours}
-              radius={50}
-              borderWidth={8}
-              color="#3399FF"
-              shadowColor="#999"
-              bgColor="#fff"
-            >
-              <Text style={{ fontSize: 18 }}>{this.state.totalHours}</Text>
-            </ProgressCircle>
+            <View style={styles.modalstyle}>
+              <View style={{ margin: 10 }}>
+                <Text style={{ color: '#fff' }}>الساعات المقطوعه :</Text>
+              </View>
+              <ProgressCircle
+                percent={parseInt(this.state.totalHours, 10)}
+                radius={50}
+                borderWidth={8}
+                color="#3399FF"
+                shadowColor="#999"
+                bgColor="#fff"
+              >
+                <Text style={{ fontSize: 18 }}>{this.state.totalHours}</Text>
+              </ProgressCircle>
+              <View style={{ flexDirection: 'row', color: '#fff', justifyContent: 'space-between', width: '100%', padding: 20 }}>
 
+                <Text style={{ color: '#fff' }}>المعدل الفصلي : {this.state.semGPA}</Text>
+                <Text style={{ color: '#fff' }}>الساعات الفصلية : {this.state.semesterHours}</Text>
+              </View>
 
+              <Text style={{ color: '#fff' }}>المعدل التراكمي : {this.state.fullGPA.toFixed(2)}</Text>
+              <Text style={{ color: '#fff' }}>وضع الطالب : {this.state.avg}</Text>
+              <View style={{ margin: '5%', width: '90%' }}>
+                <Button icon='calculator' label='رجوع' onPress={() => this.setState({ v: false,avg:'' })} />
+              </View>
+            </View>
           </Modal>
         </ScrollView>
       </View>
@@ -483,9 +510,12 @@ const styles = StyleSheet.create(
       color: '#fff'
     },
     modalstyle: {
-      width: '70%',
-      height: '40%',
-      opacity: 0.9
+      height: '50%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: common_styles.colors.main_back_color_light,
+
+
     }
   }
 )
